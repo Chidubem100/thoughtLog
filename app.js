@@ -9,6 +9,8 @@ const app = express();
 // OTHER PACKAGES
 const connectDB = require('./db/connectDB');
 const notFound = require('./middlewares/notFound');
+const errMid = require('./middlewares/errorMid');
+const userRoute = require('./routes/userRoutes');
 
 // APP CONFIG
 app.use(express.json());
@@ -16,7 +18,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // ROUTES
-
+app.use(userRoute);
 
 // Testing route
 app.get('/t', (req,res) =>{
@@ -26,10 +28,9 @@ app.get('/t', (req,res) =>{
 
 // 
 app.use(notFound);
-
+app.use(errMid);
 
 const port = 2000 || process.env.PORT;
-
 const start = async() =>{
     try {
         await connectDB();

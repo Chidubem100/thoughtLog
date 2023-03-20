@@ -9,5 +9,5 @@ const asyncWrapper = (fn) =>{
     }
 };
 
-
-export default asyncWrapper;
+module.exports = asyncWrapper;
+// export default asyncWrapper;

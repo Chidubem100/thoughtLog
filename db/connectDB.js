@@ -11,7 +11,7 @@ const connectDB = () =>{
     mongoose.connect(`mongodb://${DB.Host}:${DB.Port}/${DB.DBName}`, {
 
     }).then(() =>{
-        console.log(`db connected have started`)
+        // console.log(`db connected have started`)
     }).catch(err =>{
         console.error('connection Error', err);
         process.exit();
