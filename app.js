@@ -14,6 +14,7 @@ const connectDB = require('./db/connectDB');
 const notFound = require('./middlewares/notFound');
 const errMid = require('./middlewares/errorMid');
 const userRoute = require('./routes/userRoutes');
+const blogRouter = require('./routes/blogRoutes');
 
 // APP CONFIG
 app.use(express.json());
@@ -25,6 +26,7 @@ app.use(cookieParser('secret'));
 
 // ROUTES
 app.use(userRoute);
+app.use(blogRouter);
 
 const {authenticateUser} = require('./middlewares/authMiddleware')
 // Testing route
