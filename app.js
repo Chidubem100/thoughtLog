@@ -22,11 +22,11 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(methodOverride('_method'));
-app.use(cookieParser('secret'));
+app.use(cookieParser(process.env.CookieSecrete));
 
 // ROUTES
 app.use(userRoute);
-app.use(blogRouter);
+// app.use(blogRouter);
 
 const {authenticateUser} = require('./middlewares/authMiddleware')
 // Testing route

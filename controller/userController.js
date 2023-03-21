@@ -84,6 +84,38 @@ const mLogin = asyncWrapper(async(req,res) =>{
     return res.render('testing')
 });
 
+// change password
+const cPassword = asyncWrapper(async(req,res) =>{
+    res.render('user/changePassword')
+    
+});
+
+const changePassword = asyncWrapper(async(req,res) =>{
+    const {newPassword, password} = req.body;
+
+    if(!newPassword || !password){
+        throw new Error('Please provide the needed details')
+    }
+
+    console.log(req.user)
+
+    // find user using the id
+    const user = User.findById(req.params.id);
+    // user.comparePassword(password);
+    console.log(user)
+    const isPasswordCorrect =  await user.comparePassword(password);
+    if(!isPasswordCorrect){
+        throw new Error('Please provide the correct password')
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    return res.send('Password changed successfully!')
+});
+
+
+
 // logout
 const logout = asyncWrapper(async(req,res) =>{
     res.cookie('token', 'logout', {
@@ -99,5 +131,7 @@ module.exports = {
     login,
     mRegister,
     mLogin,
-    logout
+    logout,
+    changePassword,
+    cPassword,
 };
