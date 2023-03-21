@@ -14,6 +14,7 @@ const connectDB = require('./db/connectDB');
 const notFound = require('./middlewares/notFound');
 const errMid = require('./middlewares/errorMid');
 const userRoute = require('./routes/userRoutes');
+const blogRouter = require('./routes/blogRoutes');
 
 // APP CONFIG
 app.use(express.json());
@@ -21,10 +22,11 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(methodOverride('_method'));
-app.use(cookieParser('secret'));
+app.use(cookieParser(process.env.CookieSecrete));
 
 // ROUTES
 app.use(userRoute);
+// app.use(blogRouter);
 
 const {authenticateUser} = require('./middlewares/authMiddleware')
 // Testing route

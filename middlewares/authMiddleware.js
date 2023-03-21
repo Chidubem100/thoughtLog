@@ -5,16 +5,16 @@ const authenticateUser = async(req,res,next) =>{
     
     const token = req.signedCookies.token;
     if(!token){
-        throw new Error('Plese login')
+        return res.redirect('/login');
+        // throw new Error('Plese login')
     }
 
     try {
-        const payload = jwt.verify(token, 'secrete');
-        req.user = {userId: payload.userId, username: payload.username, role: payload.role}
+        const payload = jwt.verify(token, process.env.JwtSecrete);
+        req.user = {userId: payload.userId, username: payload.username, role}
         next();
     } catch (error) {
-        // console.log(error)
-        throw new Error('Authentication failed')
+        return res.redirect('/login')
     };
 };
 
