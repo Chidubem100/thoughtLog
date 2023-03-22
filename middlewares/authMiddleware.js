@@ -11,10 +11,11 @@ const authenticateUser = async(req,res,next) =>{
 
     try {
         const payload = jwt.verify(token, process.env.JwtSecrete);
-        req.user = {userId: payload.userId, username: payload.username, role}
+        req.user = {userId: payload.userId, username: payload.username, role: payload.role}
         next();
     } catch (error) {
-        return res.redirect('/login')
+        console.log(error)
+        // return res.redirect('/login')
     };
 };
 

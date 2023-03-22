@@ -16,11 +16,11 @@ const blogSchema = new mongoose.Schema({
     image: {
         type: String,
     },
-    createdBy: {
-        type: mongoose.Types.ObjectId,
-        ref: 'User',
-        required: true,
-    }
+    // createdBy: {
+    //     type: mongoose.Types.ObjectId,
+    //     ref: 'User',
+    //     required: true,
+    // }
 },{timestamps: true});
 
 
