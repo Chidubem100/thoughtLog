@@ -16,7 +16,9 @@ const {
 
 
 
-
+router.route('/').get(getAllPosts);
+router.route('/new').get(createPost).post(createPosts);
+router.route(':/id').get(getSinglePost).get(editPost).post(editPosts).delete(deletePost);
 
 
 

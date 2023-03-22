@@ -7,6 +7,8 @@ const ejs = require('ejs');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
+const expressSanitizer = require('express-sanitizer');
+const expressFileUpload = require('express-fileupload');
 const app = express();
 
 // OTHER PACKAGES
@@ -23,14 +25,16 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(methodOverride('_method'));
 app.use(cookieParser(process.env.CookieSecrete));
+app.use(expressSanitizer());
+app.use(expressFileUpload({useTempFiles: true}));
 
 // ROUTES
 app.use(userRoute);
-// app.use(blogRouter);
+app.use(blogRouter);
 
 const {authenticateUser} = require('./middlewares/authMiddleware')
 // Testing route
-app.get('/t', authenticateUser,(req,res) =>{
+app.get('/t',(req,res) =>{
     res.render('testing')
 });
 
