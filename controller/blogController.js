@@ -9,6 +9,7 @@ const getAllPosts = asyncWrapper(async(req,res) =>{
         blog: blog,
 
     }
+    // console.log(blog)
     if(blog){
         res.render('post/homePage', context)
     }
@@ -28,72 +29,55 @@ const createPosts = asyncWrapper(async(req,res) =>{
     if(blog){
         res.redirect("/" + req.params.id);
     }
-
-    // Blog.create(req.body.blog,(err, newBlog) =>{
-    //     if(err){
-    //         console.log(err)
-    //         throw new Error('Error occcured')
-    //     }else{
-    //         console.log(newBlog);
-    //         res.redirect("/" + req.params.id);
-    //     }
-    // })
-    // res.send('create posts')
 });
 
 const editPost = asyncWrapper(async(req,res) =>{
-    await Blog.findById(req.params.id, (err, foundBlog) =>{
-        if(err){
-            console.log(err)
-            throw new Error('Error occurred')
-        }else{
-            res.render('post/updatePage', {blog:foundBlog})
-        }
-    });
+    
+    const blog = await Blog.findOne({_id: req.params.id})
+    if(blog){
+        res.render('post/updatePage', {blog})
+    }
 });
 
 const editPosts = asyncWrapper(async(req,res) =>{
-    req.body.blog.body = req.sanitizer(req.body.blog.body)
-    await Blog.findByIdAndUpdate(req.params.id, req.body.blog, {
-        runValidators: true,
-        new:true
-    },(err,updatedBlog) =>{
-        if(err){
-            console.log(err)
-            throw new Error('Error occurred')
-        }else{
-            console.log(updatedBlog)
-            res.redirect("/" + req.params.id);
-        }
-    })
+    req.body.blog.body = req.sanitize(req.body.blog.body)
+   
+    const blog = await Blog.findByIdAndUpdate(req.params.id, req.body.blog,{
+        new:true,
+        runValidators: true
+    });
+    // console.log(blog)
+    if(blog){
+        res.redirect('/blog/' + req.params.id)
+    }
 });
 
 const getSinglePost  = asyncWrapper(async(req,res) =>{
-    // Blog.findById(req.params.id, (err, foundBlog) =>{
+   const blog = await Blog.findOne({_id: req.params.id})
+    
+    if(blog){
+        res.render('post/showPage', {blog})
+    }
+    console.log(blog)
+});
+
+const deletePost = asyncWrapper(async(req,res) =>{
+    // await Blog.findByIdAndDelete(req.params.id, (err) =>{
     //     if(err){
     //         console.log(err)
     //         throw new Error('Error occurred')
     //     }else{
-    //         res.render('post/updatePage', {blog:foundBlog})
+    //         console.log('deleted successfully')
+    //         res.redirect('/')
     //     }
-    // });
+    // })
 
-    const blog = await Blog.findById(req.params.id);
+    const blog = await Blog.findByIdAndDelete(req.params.id);
     if(blog){
-        res.render('post/showPage', {blog: foundBlog})
+        console.log('deleted successfully')
+        res.redirect('/')
     }
-});
 
-const deletePost = asyncWrapper(async(req,res) =>{
-    await Blog.findByIdAndDelete(req.params.id, (err) =>{
-        if(err){
-            console.log(err)
-            throw new Error('Error occurred')
-        }else{
-            console.log('deleted successfully')
-            res.redirect('/')
-        }
-    })
     // res.send('delete post')
 });
 
