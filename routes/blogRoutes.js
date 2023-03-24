@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const Blog = require('../models/blogModel')
 
 const {authenticateUser, authorizeUser} = require('../middlewares/authMiddleware');
 
@@ -18,8 +19,9 @@ const {
 
 router.route('/').get(getAllPosts);
 router.route('/new').get(createPost).post(createPosts);
-router.route(':/id').get(getSinglePost).get(editPost).post(editPosts).delete(deletePost);
-
+// router.get('/blog/:id',getSinglePost);
+router.route('/blog/:id').get(getSinglePost).put(editPosts).delete(deletePost);
+router.route('/blog/:id/edit').get(editPost)
 
 
 module.exports = router;

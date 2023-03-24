@@ -1,0 +1,19 @@
+<%- include("../partials/header")-%>
+
+<section>
+    <div><%= blog.title %></div>
+    <input type="file" accept="image*/">
+    <div><%- blog.body%></div>
+    <span><%= blog.createdAt %></span>
+    <span><%= blog.updatedAt %></span>
+    <div>
+        <a href="/blog/<%=blog._id%>/edit">Edit</a>
+    </div>
+    <form id="remove" action="/blog/<%= blog._id %>?_method=DELETE" method="POST">
+        <button>DELETE</button>
+    </form>
+</section>
+
+
+
+<%- include("../partials/header")-%>
