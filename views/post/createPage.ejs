@@ -4,9 +4,9 @@
 
 <section>
     <h3>New Post</h3>
-    <form action="/new" method="post">
+    <form action="/new" method="post" id="" enctype="multipart/form-data">
         <input type="text" name="blog[title]" placeholder="Title">
-        <input type="file" name="blog[image]" accept="image*/">
+        <input type="file" name="userFile">
         <textarea name="blog[body]" id="" cols="30" rows="10" placeholder="Body"></textarea>
         <input type="submit" value="submit">
     </form>

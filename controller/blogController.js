@@ -1,7 +1,18 @@
 
 const asyncWrapper = require('../middlewares/asyncWrapper');
 const Blog = require('../models/blogModel');
+const multer = require('multer')
+const path = require('path')
 
+let storage = multer.diskStorage({
+    destination: function(req,file,callback){
+        callback(null, './uploads')
+    },
+    filename:function(req,file,callback){
+        console.log(file)
+        callback(null, file.fieldname + '_' + Date.now() + path.extname(file.originalname))
+    }
+})
 
 const getAllPosts = asyncWrapper(async(req,res) =>{
     const blog = await Blog.find({});
@@ -21,15 +32,18 @@ const createPost = asyncWrapper(async(req,res) =>{
 });
 
 const createPosts = asyncWrapper(async(req,res) =>{
-    req.body.blog.body = req.sanitize(req.body.blog.body);
-    // req.body.blog.createdBy = req.user;
+
+    console.log(req.file)
+    console.log(req.body)
+    req.body.blog.body = req.sanitize(req.body.blog.body)
+    
 
     const blog = await Blog.create(req.body.blog);
     console.log(blog)
     if(blog){
-        res.redirect("/" + req.params.id);
+        res.redirect('/')
     }
-});
+})
 
 const editPost = asyncWrapper(async(req,res) =>{
     
@@ -62,27 +76,28 @@ const getSinglePost  = asyncWrapper(async(req,res) =>{
 });
 
 const deletePost = asyncWrapper(async(req,res) =>{
-    // await Blog.findByIdAndDelete(req.params.id, (err) =>{
-    //     if(err){
-    //         console.log(err)
-    //         throw new Error('Error occurred')
-    //     }else{
-    //         console.log('deleted successfully')
-    //         res.redirect('/')
-    //     }
-    // })
-
+    
     const blog = await Blog.findByIdAndDelete(req.params.id);
     if(blog){
         console.log('deleted successfully')
         res.redirect('/')
     }
-
-    // res.send('delete post')
 });
 
 const uploadImage = asyncWrapper(async(req,res) =>{
-    // res.send('image upload')
+    let upload = multer({
+        storage: storage,
+        fileFilter: function(req,file,callback){
+            let ext = path.extname(file.originalname)
+            if(ext !== '.png' && ext !== '.jpg' && ext !== 'gif' && ext !== '.jpeg'){
+                return callback(res.end('Only images are allowed'), null)
+            }
+            callback(null, true)
+        }
+    }).single('userFile');
+    upload(req,res, function(err){
+        console.log('done')
+    })
 });
 
 
