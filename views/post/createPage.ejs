@@ -5,71 +5,15 @@
 <section>
     <h3>New Post</h3>
     <form action="" method="" class="file-form" id="" enctype="multipart/form-data">
-        <input type="text" name="blog[title]" placeholder="Title">
-        <input type="file" name="userFile">
-        <textarea name="blog[body]" id="" cols="30" rows="10" placeholder="Body"></textarea>
+        <input type="text" name="title" id="title" placeholder="Title">
+        <!-- <input type="file" name="image" id="image"> -->
+        <textarea name="" id="blog" cols="30" rows="10" placeholder="Body"></textarea>
         <input type="submit" value="submit">
+    
     </form>
 </section>
 
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<script>
-    alert('working')
-    const url = '/api/v1/products'
-    const fileFormDOM = document.querySelector('.file-form')
-
-    const nameInputDOM = document.querySelector('#name')
-    const priceInputDOM = document.querySelector('#price')
-    const imageInputDOM = document.querySelector('#image')
-
-// const containerDOM = document.querySelector('.container')
-    let imageValue;
-
-// imageInputDOM.addEventListener('change',(e)=>{
-//  const file = e.target.files[0];
-//  console.log(file);
-// })
-
-
-
-
-
-
-
-imageInputDOM.addEventListener('change',async (e)=>{
-    const imageFile = e.target.files[0];
-    const formData = new FormData();
-    formData.append('image',imageFile)
-    try {
-        const {data:{image:{src}}} = await axios.post(`${url}/uploads`,formData,{
-        headers:{
-        'Content-Type':'multipart/form-data'
-    }
-    })
-     imageValue = src
- } catch (error) {
-   imageValue = null
-    console.log(error);
- }
-})
-
-
-fileFormDOM.addEventListener('submit',async (e)=>{
-e.preventDefault()
-const nameValue = nameInputDOM.value;
-const priceValue = priceInputDOM.value;
-try {
- 
- const product = {name:nameValue,price:priceValue,image:imageValue}
- console.log(product)
-  await axios.post(url,product);
-  // fetchProducts()
-} catch (error) {
- console.log(error);
-}
-})
-</script>
 <%- include("../partials/header")-%>
