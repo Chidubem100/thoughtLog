@@ -2,12 +2,15 @@
 
 
 <section>
+    <h3>Post feed</h3>
     <div>
         <% blog.forEach(function(b){%>
             <a href="/blog/<%=b._id%>"><%= b.title %></a>
-            <!-- <input type="file" name="" id=""> -->
             <div>
-                <span><%= b.body %></span>
+                <img src="/uploads/<%=b.image%>" alt="<%= b.title%>" loading="lazy">
+            </div>
+            <div>
+                <span><%= b.bod %></span>
             </div>
             <div>
                 <span><%= b.createdAt %></span>

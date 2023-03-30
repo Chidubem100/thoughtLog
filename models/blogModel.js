@@ -8,9 +8,9 @@ const blogSchema = new mongoose.Schema({
         maxLength: [50, 'Title sjould not be more than 50 characters'],
         trim: true,
     },
-    body: {
+    bod: {
         type: String,
-        required: true,
+        // required: true,
         trim: true,
     },
     image: {
