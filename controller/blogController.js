@@ -88,7 +88,7 @@ const editPosts = asyncWrapper(async(req,res) =>{
 });
 
 const getSinglePost  = asyncWrapper(async(req,res) =>{
-   const blog = await Blog.findOne({_id: req.params.id})
+   const blog = await Blog.findOne({_id: req.params.id}).populate('comments');
     
     if(blog){
         res.render('post/showPage', {blog})
