@@ -10,12 +10,17 @@ const blogSchema = new mongoose.Schema({
     },
     bod: {
         type: String,
-        // required: true,
         trim: true,
     },
     image: {
         type: String,
     },
+    comments: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Comment'
+        }
+    ]
     // createdBy: {
     //     type: mongoose.Types.ObjectId,
     //     ref: 'User',
