@@ -17,6 +17,7 @@ const notFound = require('./middlewares/notFound');
 const errMid = require('./middlewares/errorMid');
 const userRoute = require('./routes/userRoutes');
 const blogRouter = require('./routes/blogRoutes');
+const commentRouter = require('./routes/commentRoutes');
 
 // APP CONFIG
 app.use(express.json());
@@ -32,6 +33,7 @@ app.use(expressFileUpload({useTempFiles: true}));
 // ROUTES
 app.use(userRoute);
 app.use(blogRouter);
+app.use(commentRouter);
 
 const {authenticateUser} = require('./middlewares/authMiddleware')
 // Testing route
