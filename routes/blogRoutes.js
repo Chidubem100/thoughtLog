@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const Blog = require('../models/blogModel')
 
 const {authenticateUser, authorizeUser} = require('../middlewares/authMiddleware');
 
@@ -12,16 +11,14 @@ const {
     editPost,
     editPosts,
     deletePost,
-    uploadImage
 } = require('../controller/blogController');
 
 
 
 router.route('/').get(getAllPosts);
-router.route('/new').get(createPost).post(createPosts);
-// router.get('/blog/:id',getSinglePost);
-router.route('/blog/:id').get(getSinglePost).put(editPosts).delete(deletePost);
-router.route('/blog/:id/edit').get(editPost)
+router.route('/new').get(authenticateUser,createPost).post(createPosts);
+router.route('/blog/:id').get(authenticateUser,getSinglePost).put(authenticateUser,authorizeUser('admin'),editPosts).delete(authenticateUser,authorizeUser('admin'),deletePost);
+router.route('/blog/:id/edit').get(authenticateUser,authorizeUser('admin'),editPost)
 
 
 module.exports = router;
