@@ -26,7 +26,7 @@ const mRegister = asyncWrapper(async(req,res) =>{
         throw new Error('Password must be atleast 7 characters')
     }
 
-    const isFirstAcc = await User.countDocuments({}) === 0;
+    const isFirstAcc = await User.countDocuments({}) >= 1;
     const role = isFirstAcc ? 'admin' : 'user'; 
 
     // const isSecondAcc = await User.countDocuments({}) === 1;

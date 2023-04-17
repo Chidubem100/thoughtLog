@@ -3,7 +3,7 @@ const asyncWrapper = require('../middlewares/asyncWrapper');
 const Blog = require('../models/blogModel');
 const multer = require('multer')
 const path = require('path');
-// const { post } = require('../routes/userRoutes');
+
 
 let storage = multer.diskStorage({
     destination: function(req,file,callback){
@@ -13,7 +13,7 @@ let storage = multer.diskStorage({
         console.log(file)
         callback(null, file.fieldname + '_' + Date.now() + path.extname(file.originalname))
     }
-})
+});
 
 const getAllPosts = asyncWrapper(async(req,res) =>{
     const blog = await Blog.find({});
@@ -21,7 +21,6 @@ const getAllPosts = asyncWrapper(async(req,res) =>{
         blog: blog,
 
     }
-    // console.log(blog)
     if(blog){
         res.render('post/homePage', context)
     }
@@ -53,6 +52,8 @@ const createPosts = asyncWrapper(async(req,res) =>{
         });
     }
 
+    // req.body.user = req.user.userId;
+
     const newPost = new Blog({
         title: req.body.title,
         bod: req.body.bod,
@@ -64,7 +65,7 @@ const createPosts = asyncWrapper(async(req,res) =>{
 
     res.redirect('/')
 
-})
+});
 
 const editPost = asyncWrapper(async(req,res) =>{
     
@@ -81,7 +82,7 @@ const editPosts = asyncWrapper(async(req,res) =>{
         new:true,
         runValidators: true
     });
-    // console.log(blog)
+    
     if(blog){
         res.redirect('/blog/' + req.params.id)
     }
