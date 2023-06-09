@@ -1,0 +1,28 @@
+<%- include("../partials/header")-%>
+
+<section>
+    <div >Edit => <%= blog.title %></div>
+        <form action="/blog/<%=blog._id%>?_method=PUT" method="POST">
+            <div>
+                <label>Title</label>
+                <input type="text" name="blog[title]" value="<%=blog.title%>">
+            </div>
+            <div>
+                <!-- <input type="file" name="blog[image]" value="%>" accept="image*/"> -->
+                <img src="/uploads/<%=blog.image%>" alt="<%= blog.title%>" loading="lazy">
+            </div>
+
+            <div>
+                <label>Content</label>
+                <textarea name="blog[bod]" value="<%= blog.bod%>"><%= blog.bod%></textarea>
+            </div>
+            <input type="submit">
+        </form>   
+   </div>
+</section>
+
+
+
+
+
+<%- include("../partials/header")-%>

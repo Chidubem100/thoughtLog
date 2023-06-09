@@ -1,6 +1,6 @@
 
-const asyncWrapper = require('../middlewares/asyncWrapper');
-const User = require('../models/userModel');
+const asyncWrapper = require('../server/middlewares/asyncWrapper');
+const User = require('../server/models/userModel');
 
 
 // sign up
@@ -26,7 +26,7 @@ const mRegister = asyncWrapper(async(req,res) =>{
         throw new Error('Password must be atleast 7 characters')
     }
 
-    const isFirstAcc = await User.countDocuments({}) === 0;
+    const isFirstAcc = await User.countDocuments({}) >= 1;
     const role = isFirstAcc ? 'admin' : 'user'; 
 
     // const isSecondAcc = await User.countDocuments({}) === 1;
@@ -84,6 +84,39 @@ const mLogin = asyncWrapper(async(req,res) =>{
     return res.render('testing')
 });
 
+
+// change password
+const cPassword = asyncWrapper(async(req,res) =>{
+    res.render('user/changePassword')
+    
+});
+
+const changePassword = asyncWrapper(async(req,res) =>{
+    const {newPassword, oldPassword} = req.body;
+
+    if(!newPassword || !oldPassword){
+        throw new Error('Please provide the needed details')
+    }
+
+    console.log(req.user.userId)
+
+    // find user using the id
+    const user = User.findById({_id: req.user.userId});
+    
+    console.log(req.user.userId)
+
+    const isPasswordCorrect =  await user.comparePassword(oldPassword);
+    if(!isPasswordCorrect){
+        throw new Error('Please provide the correct password')
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    return res.send('Password changed successfully!')
+});
+
+
 // logout
 const logout = asyncWrapper(async(req,res) =>{
     res.cookie('token', 'logout', {
@@ -99,5 +132,7 @@ module.exports = {
     login,
     mRegister,
     mLogin,
-    logout
+    logout,
+    changePassword,
+    cPassword,
 };
