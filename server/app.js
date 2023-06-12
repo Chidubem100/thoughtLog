@@ -19,6 +19,13 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(morgan('tiny'));
+app.use((_req,res,next) =>{
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', '*')
+    next();
+});
+
+
 
 app.use("/api/v1",appRouter);
 
@@ -30,7 +37,7 @@ app.get('/', (req,res) =>{
 // NOT FOUND MIDDDLEWARE
 app.use(notFound);
 // ERROR HANDLER MIDDLEWARE
-app.use(errorHandlerMiddleware)
+// app.use(errorHandlerMiddleware)
 
 
 
