@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema({
     passwordTokenExpirationDate: {
         type: Date,
     }
-});
+},{timestamps: true});
 
 userSchema.pre("save", async function(){
     if(!this.isModified('password')) return;
