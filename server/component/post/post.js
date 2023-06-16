@@ -14,7 +14,6 @@ const postSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        default: ""
     },
     user: {
         type: mongoose.Types.ObjectId,
@@ -31,7 +30,7 @@ const postSchema = new mongoose.Schema({
 // });
 
 // postSchema.pre('remove', async function(next) {
-//     await this.model('').deleteMany({post: this._id})
+    // await this.model('').deleteMany({post: this._id})
 // });
 
 module.exports = mongoose.model("Post", postSchema);

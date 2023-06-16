@@ -1,6 +1,14 @@
 const Post = require('./post');
 const {BadRequestError, NotFoundError} = require('../../Errors');
-const {StatusCodes} = require('http-status-codes')
+const {StatusCodes} = require('http-status-codes');
+const Cloudinary = require('cloudinary').v2;
+const fs = require('fs');
+
+Cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_API_KEY,
+    api_secret: process.env.CLOUDAPI_SECRETE,
+});
 
 const getAllPost = async(req,res) =>{
     const post = await Post.find({});
@@ -10,7 +18,7 @@ const getAllPost = async(req,res) =>{
 }
 
 const createPost = async(req,res) =>{
-    const {title,body,} = req.body;
+    const {body,} = req.body;
     if(!body){
         throw new BadRequestError("Body of the post cannot be empty")
     }
@@ -22,26 +30,60 @@ const createPost = async(req,res) =>{
 }
 
 const updatePost = async(req,res) =>{
-    const {id: postId} = req.params
+    const {id: postId} = req.params;
+    // const {id: userId} = req.user;
 
+    const post = await Post.findByIdAndUpdate({_id:postId }, req.body,{
+        new: true,
+        runValidators: true
+    });
 
-    // res.status(200).json({msg: "update route"})
+    if(!post){
+        throw new NotFoundError(`There is no post with such id ${postId}`)
+    }
+
+    res.status(StatusCodes.OK).json({success:true, data: post});
 }
 
 const getSinglePost = async(req,res) =>{
     const {id: postId} = req.params;
+    const post = await Post.findOne({_id: postId});
 
-    const post = await Post.findById(req.params.id);
+    if(!post){
+        throw new NotFoundError(`There is no post with id ${postId}`)
+    }
+
     res.status(StatusCodes.OK).json({success:true, data: post})
-    // res.status(200).json({msg: "get a single post route"})
-}
+};
 
 const deletePost = async(req,res) =>{
-    res.status(200).json({msg: "delete post"})
+    const {id: postId} = req.params;
+
+    const post = await Post.findOne({_id: postId});
+    
+    if(!post){
+        throw new NotFoundError(`There is no post with id ${postId}`)
+    }
+    await post.deleteOne();
+    // await post.remove();
+    return res.send('deleted successfully')
 }
 
 const uploadImage = async(req,res) =>{
-    res.status(201).json({msg: "upload image"})
+
+    console.log(req.files)
+
+    const result = await Cloudinary.uploader.upload(
+        req.files.file.path,
+        {
+            use_filename: true,
+            folder: 'thoughtLog-fileUpload'
+        }
+    );
+
+    fs.unlinkSync(req.file.image.tempFilePath);
+    return res.status(StatusCodes.OK).json({image: {src: result.secure_url }})
+    
 }
 
 module.exports = {

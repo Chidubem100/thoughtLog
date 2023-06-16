@@ -1,7 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
-
+const {authenticateUser, authorizeUser} = require('../../middleware/authMiddleware');
 const {
     getAllPost,
     createPost,
@@ -13,11 +13,11 @@ const {
 
 
 router.get('/', getAllPost);
-router.post('/', createPost);
-router.get('/:id', getSinglePost);
-router.patch('/:id', updatePost);
-router.delete('/:id', deletePost);
-router.post('/uploadImage', uploadImage);
+router.post('/', authenticateUser,authorizeUser('admin'),createPost);
+router.get('/:id', authenticateUser,getSinglePost);
+router.patch('/:id', authenticateUser,authorizeUser('admin', 'moderator'),updatePost);
+router.delete('/:id', authenticateUser,authorizeUser('admin', 'moderator'),deletePost);
+router.post('/uploadImage',authenticateUser,authorizeUser('admin'),uploadImage);
 
 
 module.exports = router;

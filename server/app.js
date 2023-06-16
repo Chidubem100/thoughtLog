@@ -12,7 +12,6 @@ const fileUpload = require('express-fileupload');
 const notFound = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/errorMiddleware');
 const appRouter = require('../server/component/index');
-const { signedCookie } = require('cookie-parser');
 const starter = require('./seedDB');
 const app = express();
 
@@ -23,7 +22,7 @@ app.use(express.json());
 app.use(cors());
 app.use(cookieParser(process.env.SECRETE))
 app.use(morgan('tiny'));
-
+app.use(fileUpload());
 
 
 app.use("/api/v1",appRouter);
@@ -34,7 +33,7 @@ app.get('/', (req,res) =>{
 });
 
 app.use(notFound);
-// app.use(errorHandlerMiddleware)
+app.use(errorHandlerMiddleware)
 
 const port = process.env.PORT || 3000;
 const start = async() =>{
@@ -44,7 +43,7 @@ const start = async() =>{
             log.info("Server is running on port " + port) 
         });
     } catch (error) {
-        
+        console.log(error)
     }
 }
 
