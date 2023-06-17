@@ -10,9 +10,10 @@ const {
     deletePost,
     uploadImage
 } = require('./post-controller');
-
+const { getSinglePostComments} = require('../comment/comment-controller')
 
 router.get('/', getAllPost);
+router.get('/:id/comments', authenticateUser, getSinglePostComments);
 router.post('/', authenticateUser,authorizeUser('admin'),createPost);
 router.get('/:id', authenticateUser,getSinglePost);
 router.patch('/:id', authenticateUser,authorizeUser('admin', 'moderator'),updatePost);

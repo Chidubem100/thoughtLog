@@ -22,15 +22,15 @@ const postSchema = new mongoose.Schema({
     }
 },{timestamps: true, toJSON: {virtuals: true}, toObject: {virtuals: true}});
 
-// postSchema.virtual('', {
-//     ref: '',
-//     localField: '_id',
-//     foreignField: 'post',
-//     justOne: true
-// });
+postSchema.virtual('comment', {
+    ref: 'Comment',
+    localField: '_id',
+    foreignField: 'post',
+    justOne: true
+});
 
-// postSchema.pre('remove', async function(next) {
-    // await this.model('').deleteMany({post: this._id})
-// });
+postSchema.pre('remove', async function(next) {
+    await this.model('Comment').deleteMany({post: this._id})
+});
 
 module.exports = mongoose.model("Post", postSchema);

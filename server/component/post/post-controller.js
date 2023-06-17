@@ -31,9 +31,9 @@ const createPost = async(req,res) =>{
 
 const updatePost = async(req,res) =>{
     const {id: postId} = req.params;
-    // const {id: userId} = req.user;
+    const {id: userId} = req.user;
 
-    const post = await Post.findByIdAndUpdate({_id:postId }, req.body,{
+    const post = await Post.findByIdAndUpdate({_id:postId,userId }, req.body,{
         new: true,
         runValidators: true
     });
@@ -47,7 +47,7 @@ const updatePost = async(req,res) =>{
 
 const getSinglePost = async(req,res) =>{
     const {id: postId} = req.params;
-    const post = await Post.findOne({_id: postId});
+    const post = await Post.findOne({_id: postId}).populate('comment')
 
     if(!post){
         throw new NotFoundError(`There is no post with id ${postId}`)
