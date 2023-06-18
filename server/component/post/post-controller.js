@@ -1,14 +1,8 @@
 const Post = require('./post');
 const {BadRequestError, NotFoundError} = require('../../Errors');
 const {StatusCodes} = require('http-status-codes');
-const Cloudinary = require('cloudinary').v2;
+const { cloudinaryDelete } = require("../cloudinary/cloudinaryController");
 const fs = require('fs');
-
-Cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.CLOUD_API_KEY,
-    api_secret: process.env.CLOUDAPI_SECRETE,
-});
 
 const getAllPost = async(req,res) =>{
     const post = await Post.find({});
@@ -18,12 +12,18 @@ const getAllPost = async(req,res) =>{
 }
 
 const createPost = async(req,res) =>{
-    const {body,} = req.body;
+    // req.file is now available
+    const {body} = req.body;
     if(!body){
         throw new BadRequestError("Body of the post cannot be empty")
     }
 
     req.body.user = req.user.userId
+
+    // access url to saved image with req.file.path and add it
+    // to your request body before saving
+    if (req.file) req.body.image = req.file.path
+
     const post = await Post.create(req.body);
     return res.status(StatusCodes.CREATED).json({success: true, data: post})
     
@@ -32,8 +32,17 @@ const createPost = async(req,res) =>{
 const updatePost = async(req,res) =>{
     const {id: postId} = req.params;
     // const {id: userId} = req.user;
+    const newPost = req.body
+    const oldPost = await Post.findById(postId)
 
-    const post = await Post.findByIdAndUpdate({_id:postId }, req.body,{
+    // if picture uploaded, check if old post has image url, then delete old pic from cloudinary
+    // and set new pic url
+    if (req.file) {
+        if (oldPost.image) cloudinaryDelete(oldPost.image)
+        newPost.image = req.file.path
+    }
+
+    const post = await Post.findByIdAndUpdate({_id:postId }, newPost,{
         new: true,
         runValidators: true
     });
@@ -64,26 +73,12 @@ const deletePost = async(req,res) =>{
     if(!post){
         throw new NotFoundError(`There is no post with id ${postId}`)
     }
+
+    if (post.image) cloudinaryDelete(post.image) // delete the posts pic before deleting post
+    
     await post.deleteOne();
     // await post.remove();
     return res.send('deleted successfully')
-}
-
-const uploadImage = async(req,res) =>{
-
-    console.log(req.files)
-
-    const result = await Cloudinary.uploader.upload(
-        req.files.file.path,
-        {
-            use_filename: true,
-            folder: 'thoughtLog-fileUpload'
-        }
-    );
-
-    fs.unlinkSync(req.file.image.tempFilePath);
-    return res.status(StatusCodes.OK).json({image: {src: result.secure_url }})
-    
 }
 
 module.exports = {
@@ -92,5 +87,4 @@ module.exports = {
     updatePost,
     getSinglePost,
     deletePost,
-    uploadImage
 }
