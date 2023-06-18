@@ -1,5 +1,5 @@
 const Comment = require('./comment');
-const {BadRequestError, NotFoundError} = require('../../Errors');
+const {BadRequestError, NotFoundError,UnauthorizedError} = require('../../Errors');
 const Post = require('../post/post');
 const {StatusCodes} = require("http-status-codes")
 
@@ -31,6 +31,9 @@ const updateComment = async(req,res) =>{
 
     const Ucomment = await Comment.findOne({_id: commentId});
     
+    if(!Ucomment.user._id.equals(req.user.userId)){
+        throw new UnauthorizedError('Cannot perform this action now!!')
+    }
 
     if(!Ucomment){
         throw new NotFoundError(`There is no comment with id ${commentId}`)
@@ -51,9 +54,21 @@ const getSinglePostComments = async(req,res) =>{
     }
     res.status(StatusCodes.OK).json({success:true, count: comment.length, data: comment})
 };
+
+const deleteComment = async(req,res) =>{
+    const {id: commentId} = req.params;
+
+    const comment = await Comment.findByIdAndDelete({_id: commentId});
+    if(!comment){
+        throw new BadRequestError("Comment already deleted")
+    }
+    res.status(StatusCodes.OK).json({msg: "Post have been deleted successfully!"})
+}
+
 module.exports = {
     createComment,
     getAllComment,
     updateComment,
     getSinglePostComments,
+    deleteComment,
 }

@@ -22,7 +22,7 @@ const createPost = async(req,res) =>{
     if(!body){
         throw new BadRequestError("Body of the post cannot be empty")
     }
-
+    console.log(req)
     req.body.user = req.user.userId
     const post = await Post.create(req.body);
     return res.status(StatusCodes.CREATED).json({success: true, data: post})
@@ -64,8 +64,7 @@ const deletePost = async(req,res) =>{
     if(!post){
         throw new NotFoundError(`There is no post with id ${postId}`)
     }
-    await post.deleteOne();
-    // await post.remove();
+    await post.deleteMany();
     return res.send('deleted successfully')
 }
 

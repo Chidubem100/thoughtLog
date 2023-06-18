@@ -29,8 +29,12 @@ postSchema.virtual('comment', {
     justOne: true
 });
 
-postSchema.pre('remove', async function(next) {
-    await this.model('Comment').deleteMany({post: this._id})
+// postSchema.pre('remove', async function(next) {
+    // await this.model('Comment').deleteMany({post: this._id})
+// });
+postSchema.pre('deleteMany', async function(next){
+    console.log('deleting comment')
+    await this.model('Comment').deleteMany({post: this._id});
 });
 
 module.exports = mongoose.model("Post", postSchema);
