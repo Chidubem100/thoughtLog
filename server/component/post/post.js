@@ -33,7 +33,7 @@ postSchema.virtual('comment', {
     justOne: false,
 });
 
-postSchema.pre('remove', {document:false, query:true},async function(next){
+postSchema.pre('deleteOne', {document:false, query:true},async function(next){
     console.log('deleting comment')
     next();
     // await this.model('Comment').deleteMany({post: this.id}, next);
