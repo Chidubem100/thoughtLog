@@ -9,7 +9,6 @@ const createComment = async(req,res) =>{
     if(!comment){
         throw new BadRequestError("Comment body cannot be empty")
     }
-    console.log(req.user.userId)
     req.body.user = req.user.userId;
     const Ccomment = await  Comment.create(req.body);
     res.status(StatusCodes.OK).json({sucesss:true, data: Ccomment})
@@ -55,20 +54,9 @@ const getSinglePostComments = async(req,res) =>{
     res.status(StatusCodes.OK).json({success:true, count: comment.length, data: comment})
 };
 
-const deleteComment = async(req,res) =>{
-    const {id: commentId} = req.params;
-
-    const comment = await Comment.findByIdAndDelete({_id: commentId});
-    if(!comment){
-        throw new BadRequestError("Comment already deleted")
-    }
-    res.status(StatusCodes.OK).json({msg: "Post have been deleted successfully!"})
-}
-
 module.exports = {
     createComment,
     getAllComment,
     updateComment,
     getSinglePostComments,
-    deleteComment,
 }
