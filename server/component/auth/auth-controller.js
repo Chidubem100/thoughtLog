@@ -2,7 +2,9 @@ const customErr = require('../../Errors');
 const {StatusCodes} = require('http-status-codes')
 const User = require('./auth');
 const {createToken,attachCookiesToResponse} = require('../../utils/jwt');
-
+const crypto = require('crypto');
+const {sendResetPasswordMail} = require('../../utils/sendResetPasswordMail');
+const createHash = require('../../utils/createHash');
 
 const register = async(req,res) =>{
     const {email,password,username} = req.body;
@@ -71,8 +73,72 @@ const login = async(req,res) =>{
     const tokenUser = {username: user.username, userId: user._id, role: user.role}
     attachCookiesToResponse({res, user:tokenUser});
     return res.status(StatusCodes.CREATED).json({user: tokenUser});
-    // console.log(req.body);
-}
+};
+
+const showCurrentUser = async(req,res) =>{
+    res.status(StatusCodes.OK).json({user: req.user})
+};
+
+const forgotPassword = async(req,res) =>{
+    const {email} = req.body;
+    // const {id:userId} = req.params;
+
+    if(!email){
+        throw new customErr.BadRequestError("Please input your email")
+    }
+
+    const user = await User.findOne({email})
+
+    if(user){
+        const passwordToken = crypto.randomBytes(70).toString('hex');
+        
+        const origin = 'http://localhost:3000'; // will change this to product root url for frontend 
+        await sendResetPasswordMail({
+            username: user.username,
+            email: user.email,
+            token: passwordToken,
+            origin
+        });
+
+        const fiveMin = 1000 * 60 * 5;
+        const tokenExpirationDate = new Date(Date.now() + fiveMin);
+
+        user.passwordToken = createHash(passwordToken);
+        user.passwordTokenExpirationDate = tokenExpirationDate;
+        
+        await user.save();
+        // res.status(StatusCodes.CREATED).json({user:user.email, passwordToken}); // will remove this in production
+    }
+   return res.status(StatusCodes.OK).json({msg: `Please check your email for rest password link`});
+};
+
+const resetPassword = async(req,res) =>{
+    const {token,password,email, confirmPassword} = req.body;
+
+    if(!token || !password || !email){
+        throw new customErr.BadRequestError("Provide the needed credential(s)")
+    }
+
+    const user = await User.findOne({email});
+
+    if(user){
+        const currentDate = new Date
+        if(password !== confirmPassword){
+            throw new customErr.BadRequestError("Password does not match confirm password")
+        }
+
+        if(
+            user.passwordToken === createHash(token) &&
+            user.passwordTokenExpirationDate > currentDate
+        ){
+            user.password = password,
+            user.passwordToken = null,
+            user.passwordTokenExpirationDate = null
+        }
+        await user.save();
+        res.status(StatusCodes.OK).json({msg: 'Password have been reseted successfully'});
+    }
+};
 
 const logout = async(req,res) =>{
     res.cookie("token", "logout", {
@@ -80,10 +146,13 @@ const logout = async(req,res) =>{
         expires: new Date(Date.now() + 500)
     });
     res.status(200).json({msg: "User logged out!!!"})
-}
+};
 
 module.exports = {
     register,
     login,
+    showCurrentUser,
+    forgotPassword,
+    resetPassword,
     logout
-}
+};

@@ -52,18 +52,27 @@ const deleteUser = async(req,res) =>{
 const deletePost = async(req,res) =>{
     const {id: postId} = req.params;
     console.log({_id:postId});
+
+    // const post = Post.findOne({_id: postId});
+    // if(!post){
+    //     throw new BadRequestError("There is no post with such id")
+    // }
+
     // if (post.image) cloudinaryDelete(post.image) // delete the posts pic before deleting post
+
+    // const pPost = Post.findByIdAndRemove(post);
+
+    // await post.findOneAndRemove(req.params.id)
+    // res.status(StatusCodes.OK).json({msg: `Post deleted successfully`});
 
 };
 
 const updatePost = async(req,res) =>{
     const {id: postId} = req.params;
 
-    const newPost = req.body
-    const oldPost = await Post.findById(postId)
-
-    // if picture uploaded, check if old post has image url, then delete old pic from cloudinary
-    // and set new pic url
+    const newPost = req.body;
+    const oldPost = await Post.findById(postId);
+    
     if (req.file) {
         if (oldPost.image) cloudinaryDelete(oldPost.image)
         newPost.image = req.file.path
@@ -72,17 +81,7 @@ const updatePost = async(req,res) =>{
         new: true,
         runValidators: true
     });
-    // const {id: userId} = req.user;
-
-    // const post = await Post.findByIdAndUpdate({_id:postId,userId }, req.body,{
-    //     new: true,
-    //     runValidators: true
-    // });
-
-    // if(!post){
-    //     throw new NotFoundError(`There is no post with such id ${postId}`)
-    // }
-
+    
     res.status(StatusCodes.OK).json({success:true, data: post});
 };
 
