@@ -11,7 +11,7 @@ const sendResetPasswordMail = ({username,email,origin,token }) =>{
 
     return sendEmail({
         to: email,
-        subject: `<h3>Reseet Password email<h3>`,
+        subject: `Reseet Password email`,
         html: `<div><spanv>Hello <strong>${username}</strong>,</span> ${msg}</div>`
     });
 };
