@@ -20,10 +20,6 @@ const postSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    comments: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Comment'
-    }]
 },{timestamps: true, toJSON: {virtuals: true}, toObject: {virtuals: true}});
 
 postSchema.virtual('comment', {
@@ -33,10 +29,39 @@ postSchema.virtual('comment', {
     justOne: false,
 });
 
-postSchema.pre('deleteOne', {document:false, query:true},async function(next){
+// postSchema.pre('deleteOne', {document:false, query:true},async function(next){
+//     console.log('deleting comment')
+//     await this.model('Comment').deleteMany({post: this.id}, next);
+//     // await this.model('Review').deleteMany({product: this._id});
+//     next();
+//     // await this.model('Comment').deleteMany({post: this.id}, next);
+// });
+
+postSchema.pre('deleteOne',async function(next){
+    
     console.log('deleting comment')
-    next();
-    // await this.model('Comment').deleteMany({post: this.id}, next);
+    // const postId = this.getQuery()["_id"];
+
+    // await this.model('Comment').deleteMany({'post':postId}, functiion(err,result) {
+    //     if(err){
+    //         console.log(err)
+    //     }else {
+    //         console.log('success')
+    //         next()
+    //     }
+    // });
+
+    // await this.model("Comment").deleteMany({post:postId}, (err,result) =>{
+    //     if(err){
+    //         console.log(err)
+    //     }else{
+    //         console.log('success')
+    //         next();
+    //     }
+    // })
+    
+    // next();
+    await this.model('Comment').deleteMany({post: this.id});
 });
 
 module.exports = mongoose.model("Post", postSchema);

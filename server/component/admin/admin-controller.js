@@ -53,17 +53,18 @@ const deletePost = async(req,res) =>{
     const {id: postId} = req.params;
     console.log({_id:postId});
 
-    // const post = Post.findOne({_id: postId});
-    // if(!post){
-    //     throw new BadRequestError("There is no post with such id")
-    // }
+    const post = Post.findOne({_id: postId})
+    // console.log(post)
+    if(!post){
+        throw new BadRequestError("There is no post with such id")
+    }
 
     // if (post.image) cloudinaryDelete(post.image) // delete the posts pic before deleting post
-
-    // const pPost = Post.findByIdAndRemove(post);
-
+    await post.deleteOne();
+    // const pPost = await Post.findByIdAndRemove({_id:postId});
+    // await post.remove();
     // await post.findOneAndRemove(req.params.id)
-    // res.status(StatusCodes.OK).json({msg: `Post deleted successfully`});
+    res.status(StatusCodes.OK).json({msg: `Post deleted successfully`});
 
 };
 
@@ -94,6 +95,7 @@ const createPost = async(req,res) =>{
 
     if (req.file) req.body.image = req.file.path;
     const post = await Post.create(req.body);
+    // console.log(typeof req.body)
     return res.status(StatusCodes.CREATED).json({success: true, data: post})
     
 };
