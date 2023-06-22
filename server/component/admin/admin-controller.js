@@ -49,24 +49,43 @@ const deleteUser = async(req,res) =>{
 
 };
 
-const deletePost = async(req,res) =>{
-    const {id: postId} = req.params;
-    console.log({_id:postId});
+// const deletePost = async(req,res) =>{
+//     const {id: postId} = req.params;
+//     console.log({_id:postId});
 
-    const post = Post.findOne({_id: postId})
-    // console.log(post)
-    if(!post){
-        throw new BadRequestError("There is no post with such id")
+//     const post = Post.findOne({_id: postId})
+//     // console.log(post)
+//     if(!post){
+//         throw new BadRequestError("There is no post with such id")
+//     }
+
+//     // if (post.image) cloudinaryDelete(post.image) // delete the posts pic before deleting post
+//     await post.deleteOne();
+//     // const pPost = await Post.findByIdAndRemove({_id:postId});
+//     // await post.remove();
+//     // await post.findOneAndRemove(req.params.id)
+//     res.status(StatusCodes.OK).json({msg: `Post deleted successfully`});
+
+// };
+const deletePost = async (req, res) => {
+    
+    const {
+        params: {id: postId},
+        user: {userId}
+    } = req;
+
+    const post = await Post.findById({_id:postId, user:userId});
+
+    
+    if(!post) {
+        throw new Error("Post cannot be deleted!")
+        // throw new CustomApiError.NotFoundError('Post not found with id ' + postId);
     }
-
-    // if (post.image) cloudinaryDelete(post.image) // delete the posts pic before deleting post
+    
     await post.deleteOne();
-    // const pPost = await Post.findByIdAndRemove({_id:postId});
     // await post.remove();
-    // await post.findOneAndRemove(req.params.id)
-    res.status(StatusCodes.OK).json({msg: `Post deleted successfully`});
-
-};
+    res.status(StatusCodes.OK).json({success: true, message: 'Post deleted successfully'});
+}
 
 const updatePost = async(req,res) =>{
     const {id: postId} = req.params;
@@ -110,6 +129,14 @@ const deleteComment = async(req,res) =>{
     res.status(StatusCodes.OK).json({msg: "Comment have been deleted successfully!"})
 };
 
+const getAllComment = async(req,res) =>{
+    const comment = await Comment.find({}).populate({path: "post"}).populate({path:"user", select: "username"});
+
+    if(comment.length < 1){
+        return res.status(StatusCodes.OK).json({msg: "There is no comments available"});
+    }
+    res.status(StatusCodes.OK).json({success:true, data: comment});
+};
 
 module.exports = {
     verifyUser,
@@ -119,4 +146,5 @@ module.exports = {
     deletePost,
     updatePost,
     deleteComment,
+    getAllComment,
 };

@@ -22,46 +22,18 @@ const postSchema = new mongoose.Schema({
     },
 },{timestamps: true, toJSON: {virtuals: true}, toObject: {virtuals: true}});
 
-postSchema.virtual('comment', {
+
+postSchema.virtual('comment',{
     ref: 'Comment',
-    localField: '_id',
-    foreignField: 'post',
     justOne: false,
+    foreignField: 'post',
+    localField: '_id'
 });
 
-// postSchema.pre('deleteOne', {document:false, query:true},async function(next){
-//     console.log('deleting comment')
-//     await this.model('Comment').deleteMany({post: this.id}, next);
-//     // await this.model('Review').deleteMany({product: this._id});
-//     next();
-//     // await this.model('Comment').deleteMany({post: this.id}, next);
-// });
-
-postSchema.pre('deleteOne',async function(next){
-    
+// this deletes all comment associated to a post when deleted
+postSchema.pre('deleteOne', {document:true},async function(next){
     console.log('deleting comment')
-    // const postId = this.getQuery()["_id"];
-
-    // await this.model('Comment').deleteMany({'post':postId}, functiion(err,result) {
-    //     if(err){
-    //         console.log(err)
-    //     }else {
-    //         console.log('success')
-    //         next()
-    //     }
-    // });
-
-    // await this.model("Comment").deleteMany({post:postId}, (err,result) =>{
-    //     if(err){
-    //         console.log(err)
-    //     }else{
-    //         console.log('success')
-    //         next();
-    //     }
-    // })
-    
-    // next();
-    await this.model('Comment').deleteMany({post: this.id});
+    await this.model('Comment').deleteMany({post: this._id});
 });
 
 module.exports = mongoose.model("Post", postSchema);

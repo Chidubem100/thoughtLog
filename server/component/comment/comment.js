@@ -17,7 +17,7 @@ const commentSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-});
+},{toJSON: {virtuals: true}, toObject: {virtuals: true}});
 
 
 module.exports = mongoose.model('Comment', commentSchema);
