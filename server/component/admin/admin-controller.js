@@ -81,7 +81,7 @@ const deletePost = async (req, res) => {
         throw new Error("Post cannot be deleted!")
         // throw new CustomApiError.NotFoundError('Post not found with id ' + postId);
     }
-    
+    if (post.image) cloudinaryDelete(post.image);
     await post.deleteOne();
     // await post.remove();
     res.status(StatusCodes.OK).json({success: true, message: 'Post deleted successfully'});
