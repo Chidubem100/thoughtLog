@@ -1,10 +1,10 @@
 import React from "react";
 
 
-function HomePage(){
+function ResetPasswordPage(){
     return <section>
         HomePage
     </section>
 }
 
-export default HomePage;
+export default ResetPasswordPage;

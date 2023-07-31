@@ -1,11 +1,15 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 
 const AppContext = React.createContext()
 
 const AppProvider = ({children})=>{
 
-    return <AppContext.Provider value={{
+    const [isLoading,setIsLoading] = useState(true)
 
+
+    return <AppContext.Provider value={{
+        isLoading,
+        setIsLoading,
     }}>{children}</AppContext.Provider>
 }
 

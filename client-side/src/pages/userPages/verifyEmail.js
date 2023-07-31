@@ -3,7 +3,7 @@ import React from "react";
 
 function VerifyPage(){
     return <section>
-        HomePage
+        verify page
     </section>
 }
 
