@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter,Route,Routes } from "react-router-dom";
-import { useGlobalConext } from "./context";
 import HomePage from "./pages/userPages/home";
 import LoginPage from "./pages/userPages/login";
 import Navbar from "./components/Navbar";
@@ -12,15 +11,9 @@ import VerifyPage from "./pages/userPages/verifyEmail";
 import ResetPasswordPage from "./pages/userPages/resetPassword";
 import ForgotPasswordPage from "./pages/userPages/forgotPasssword";
 import { CreateComment, Comments } from "./pages/userPages/Comments";
-import Loading from "./pages/loading";
 
 function App() {
-  const {isLoading} = useGlobalConext();
-  console.log(isLoading)
-  if(isLoading){
-    <Loading/>
-  }
-
+  
   return <BrowserRouter>
     <Navbar/>
     <Routes>
