@@ -8,7 +8,6 @@ const baseURL = 'http://localhost:5000/api/v1/blog'
 function HomePage(){
     const {isLoading,setIsLoading} = useGlobalConext();
     const [posts, setPosts] = useState([])
-    console.log(posts)
 
     const fetchData = useCallback(async(str) =>{
         setIsLoading(true)
@@ -22,7 +21,7 @@ function HomePage(){
             }
             setIsLoading(false)
         } catch (error) {
-            <h3>ErrorPage Occured!</h3>
+            
             setIsLoading(false)
             console.log(error)
         }
