@@ -18,7 +18,7 @@ function App() {
     <Navbar/>
     <Routes>
       <Route exact path='/' element={<HomePage/>}></Route>
-      <Route exact path="/register" element={<RegisterPage/>} ></Route>
+      <Route exact path="/signup" element={<RegisterPage/>} ></Route>
       <Route exact path="/login" element={<LoginPage/>} ></Route>
       <Route exact path="/post/:id" element={<SinglePostPage/>}></Route>
       <Route exact path="/create-comment" element={<CreateComment/>}></Route>
