@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState} from "react";
 
 
 const useLocalState = () =>{
@@ -9,7 +9,7 @@ const useLocalState = () =>{
         setAlert({show, msg, type})
     }
 
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
 
     return {

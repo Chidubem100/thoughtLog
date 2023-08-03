@@ -32,21 +32,21 @@ const register = async(req,res) =>{
         console.log(user)
         const tokenUser = {username: user.username, userId: user._id, role: user.role}
         attachCookiesToResponse({res, user:tokenUser});
-        return res.status(StatusCodes.CREATED).json({user: tokenUser});
+        return res.status(StatusCodes.CREATED).json({user: tokenUser,msg:'Please check your mail for verification Link'});
     }else if(isSecond){
         const role = 'moderator'
         const user = await User.create({email,username,password,role});
         console.log(user)
         const tokenUser = {username: user.username, userId: user._id, role: user.role}
         attachCookiesToResponse({res, user:tokenUser});
-        return res.status(StatusCodes.CREATED).json({user: tokenUser});
+        return res.status(StatusCodes.CREATED).json({user: tokenUser,msg:'Please check your mail for verification Link'});
     }else{
         const role = 'user'
         const user = await User.create({email,username,password,role});
         console.log(user)
         const tokenUser = {username: user.username, userId: user._id, role: user.role}
         attachCookiesToResponse({res, user:tokenUser});
-        return res.status(StatusCodes.CREATED).json({user: tokenUser});
+        return res.status(StatusCodes.CREATED).json({user: tokenUser, msg:'Please check your mail for verification Link'});
     }
 }
 
