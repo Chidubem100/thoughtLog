@@ -64,7 +64,7 @@ const login = async(req,res) =>{
         throw new customErr.BadRequestError('Invalid credentials. Try again')
     }
 
-    console.log(user)
+    // console.log(user)
     const isPasswordCorrect = await user.comparePassword(password);
     if(!isPasswordCorrect){
         throw new customErr.BadRequestError('Invalid credentials. Try again')

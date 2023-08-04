@@ -8,7 +8,7 @@ import Alert from "../../components/Alert";
 const baseURL = 'http://localhost:5000/api/v1/auth/signup';
 
 function RegisterPage(){
-    // const {} = useGlobalConext();
+    
     const {showAlert,alert,loading,setLoading,setSuccess} = useLocalState();
     const [val,setVal] = useState({username:'',email:'',password:''})
     
@@ -29,9 +29,10 @@ function RegisterPage(){
         try {
             const {data} = await axios.post(baseURL,newUser);
             // console.log(data)
-            setSuccess(true)
+            setSuccess(true);
             setVal({username:'',email:'',password:''});
-            showAlert(true,[data.msg], 'success')
+            showAlert(true,[data.msg], 'success');
+            // <Modal/>
         } catch (error) {
             const { msg } = error.response.data;
             showAlert( true,  [msg]||'There was an error','danger' );
@@ -40,13 +41,11 @@ function RegisterPage(){
     }
 
     useEffect(() =>{
-        document.title = 'Sign-up page'
+        document.title = 'Sign-up'
     },[]);
     
     return <section className="form-main container">   
-    {/* <Container fluid> */}
-        {/* <Row> */}
-            {/* <Col> */}
+   
             
             
                 <Form className={loading? 'sect-form form-loading' : 'sect-form'} onSubmit={handleSubmit} >
@@ -76,10 +75,6 @@ function RegisterPage(){
                 
                 </Form>
             
-            {/* </Col> */}
-        {/* // </Row> */}
-        
-     {/* </Container> */}
     </section>
 }
 
