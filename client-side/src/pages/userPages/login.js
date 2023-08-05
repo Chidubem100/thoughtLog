@@ -58,7 +58,7 @@ function LoginPage(){
     
                 <Form className={loading? 'sect-form form-loading' : 'sect-form'} onSubmit={handleForm}>
                     {alert.show && <Alert {...alert} removeAlert={showAlert}/>}
-                    {alert.show && <Alert {...alert} removeAlert={showAlert}/>}
+                
                     <h4>Login</h4>
                     <Form.Group className="mb-3" >
                         <Form.Label>Email address:</Form.Label>
@@ -70,7 +70,9 @@ function LoginPage(){
                         <Form.Control type="password" placeholder="Password" name="password" value={val.password} onChange={handleChange}/>
                     </Form.Group>
             
-                    <Button className="form-btn" disabled={loading} style={{background:'#e2e0ff',fontWeight:'bold',color:'#425e16', border:'none'}} type="submit">Submit</Button>
+                    <Button className="form-btn" disabled={loading} style={{background:'#e2e0ff',fontWeight:'bold',color:'#425e16', border:'none'}} type="submit">
+                        {loading ? 'Please Wait...' : 'Submit'}{/* Submit */}
+                    </Button>
 
                     <div style={{marginTop:'7px'}}>
                         <p>Not a user? <Link to='/signup' style={{color:'#e2e0ff',textDecoration:'none'}}>Sign Up here</Link></p>

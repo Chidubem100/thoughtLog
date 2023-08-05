@@ -7,7 +7,6 @@ import ErrorPage from "./pages/errorPage";
 import RegisterPage from "./pages/userPages/register";
 import SinglePostPage from "./pages/userPages/singlePost";
 import Post from  './pages/adminPages/post';
-import VerifyPage from "./pages/userPages/verifyEmail";
 import ResetPasswordPage from "./pages/userPages/resetPassword";
 import ForgotPasswordPage from "./pages/userPages/forgotPasssword";
 import { CreateComment, Comments } from "./pages/userPages/Comments";
@@ -25,7 +24,6 @@ function App() {
       <Route exact path="/comments/:id" element={<Comments/>}></Route>
       <Route exact path="/admin/create-post" element={<Post/>}></Route>
       <Route path='/user/forgot-password' exact element={<ForgotPasswordPage/>}></Route>
-      <Route path='/user/verify-email' exact element={<VerifyPage/>} ></Route>
       <Route path='/user/reset-password' exact element={<ResetPasswordPage/>} ></Route>
       <Route exact path="*" element={<ErrorPage/>}></Route>
     </Routes>
