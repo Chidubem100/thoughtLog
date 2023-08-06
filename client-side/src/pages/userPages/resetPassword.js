@@ -2,10 +2,10 @@ import React,{useState,useEffect} from "react";
 import axios from "axios";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { Link,useNavigate,useLocation} from "react-router-dom";
+import {useNavigate,useLocation} from "react-router-dom";
 import { useLocalState } from "../../utils/alert";
 import Alert from "../../components/Alert";
-const baseURL = 'http://localhost:5000/api/v1/auth/forgot-password';
+const baseURL = 'http://localhost:5000/api/v1/auth/reset-password';
 
 function useQuery(){
     return new URLSearchParams(useLocation().search)
@@ -50,6 +50,9 @@ function ResetPasswordPage(){
         }
     }
 
+    useEffect(() =>{
+        document.title = 'Reset password'
+    },[])
 
     return <section className="form-main container">   
     

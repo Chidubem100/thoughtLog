@@ -2,6 +2,7 @@ import React, { useState,useEffect,useCallback } from "react";
 import { useGlobalConext } from "../../context";
 import Loading from "../loading";
 import axios from 'axios';
+import { Link} from "react-router-dom";
 const baseURL = 'http://localhost:5000/api/v1/blog'
 
 
@@ -30,6 +31,7 @@ function HomePage(){
     
     useEffect(() =>{
         fetchData(baseURL)
+        document.title = 'thought Log'
     },[fetchData])
 
     if(isLoading){
@@ -40,13 +42,13 @@ function HomePage(){
         {
             posts.map((p) =>{
                 const {id,title,body,createdAt} = p;
-                return <article key={id} className="container sect-contain">
+                return <article key={id} className="container  sect-contain">
                     <div className="row">
                         <div className="column">
                             <h3>{title}</h3>
                             <div className="post-div">
                                 <p>Created on: {createdAt.slice(0,10)}</p>
-                                <p>{body.slice(0,100)}...<button className="btnn">Read more</button></p>
+                                <p>{body.slice(0,100)}...<Link className="btnn" to={`post/${id}`}>Read more</Link></p>
                             </div>
                         </div>
                     </div>
