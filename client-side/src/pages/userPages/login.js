@@ -30,7 +30,7 @@ function LoginPage(){
         try {
             const {data} = await axios.post(baseURL,loginUser);
             console.log(data.user)
-            saveUser(data.user)
+            // saveUser(data.user)
             setSuccess(true)
             setLoading(false)
             setVal({email:"",password:""});
@@ -40,6 +40,7 @@ function LoginPage(){
                 text: `Welcome, ${data.username}.`,
                 type: 'success',
             });
+            saveUser(data.user)
             navigate('/', {replace: true})
              
         } catch (error) {
