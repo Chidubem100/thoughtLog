@@ -29,18 +29,19 @@ function LoginPage(){
         const loginUser = {email,password};
         try {
             const {data} = await axios.post(baseURL,loginUser);
-            console.log(data.user)
-            // saveUser(data.user)
+            const user = data.user;
+            console.log(user)
+            saveUser(user)
             setSuccess(true)
             setLoading(false)
             setVal({email:"",password:""});
             
             
             showAlert({
-                text: `Welcome, ${data.username}.`,
+                text: `Welcome, ${user.username}.`,
                 type: 'success',
             });
-            saveUser(data.user)
+            // saveUser(user)
             navigate('/', {replace: true})
              
         } catch (error) {
