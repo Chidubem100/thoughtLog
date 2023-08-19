@@ -1,50 +1,71 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import axios from 'axios';
-const baseURL = 'http://localhost:5000/api/v1//auth/showMe';
+const baseURL = 'http://localhost:5000/api/v1/auth/showMe';
 const AppContext = React.createContext();
 
 const AppProvider = ({children})=>{
     // const {showAlert} =useLocalState()
     const [isLoading,setIsLoading] = useState(true)
-    const [isUser, setIsUser] = useState(null);
+    const [user, setUser] = useState(null);
 
     const saveUser = (user) =>{
-        setIsUser(user)
+        setUser(user)
     }
 
     const removeUser = () =>{
-        setIsUser(null)
+        setUser(null)
     }
 
-    const fetchUser = useCallback( async(str) =>{
+    // const fetchUser = useCallback( async(str) =>{
+    //     try {
+    //         const {data} = await axios.get(str);
+    //         setIsUser(data.user)
+    //     } catch (error) {
+    //         removeUser()
+    //     }
+    //     setIsLoading(false)
+    // },[])
+
+
+    const fetchUser = useCallback(async()=>{
         try {
-            const {data} = await axios.get(str);
-            setIsUser(data.user)
+            const resp = await fetch(baseURL)
+            if(resp.ok){
+                const data = await resp.json()
+                console.log('user saved')
+                return setUser(data)
+            }else{
+                console.log(`unauthenticated`)
+            }
+            
         } catch (error) {
             removeUser()
         }
-        setIsLoading(false)
-    },[])
-
-    const  logoutUser = async(str) =>{
-        try {
-            await axios.get(str)
-            removeUser()
-        } catch (error) {
-            return <p>Error occured!!</p>
-        }
-    }
+    },[]);
 
     useEffect(() =>{
-        fetchUser(baseURL)
-    },[fetchUser]);
+        fetchUser()
+    },[fetchUser])
+
+    // const  logoutUser = async(str) =>{
+    //     try {
+    //         await axios.get(str)
+    //         removeUser()
+    //     } catch (error) {
+    //         return <p>Error occured!!</p>
+    //     }
+    // }
+
+    // useEffect(() =>{
+    //     fetchUser(baseURL)
+    // },[fetchUser]);
 
     return <AppContext.Provider value={{
         isLoading,
         setIsLoading,
         saveUser,
-        isUser,
-        logoutUser
+        user,
+        // logoutUser
     }}>{children}</AppContext.Provider>
 }
 

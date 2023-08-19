@@ -12,35 +12,38 @@ function SinglePostPage(){
     const {alert,showAlert} = useLocalState()
     const baseURL = `http://localhost:5000/api/v1/blog/${id}`;
     const [post,setPost] = useState(null);
+    
+    // const fetchPost = useCallback(async() =>{ 
+    //     setIsLoading(true)
+    //     try {
+    //         const dataa = await axios.get(baseURL);
+    //         const {data} = dataa;
+    //         if(){
 
-    const fetchPost = useCallback(async() =>{ 
-        setIsLoading(true)
-        try {
-            const dataa = await axios.get(baseURL);
-            const {data} = dataa;
-            if (data) {
-                console.log(data)
-                setPost(data.data)
-            } else {
-                setPost(null)
-            }
-            setIsLoading(false)
-        } catch (error) {
-            showAlert(true,[error.response.data.msg],'danger')
-            console.log(error)
-        }
-    },[baseURL,setIsLoading,showAlert]);
+    //         }
+    //         if (data) {
+    //             console.log(data)
+    //             setPost(data.data)
+    //         } else {
+    //             setPost(null)
+    //         }
+    //         setIsLoading(false)
+    //     } catch (error) {
+    //         showAlert(true,[error.response.data.msg],'danger')
+    //         console.log(error)
+    //     }
+    // },[baseURL,setIsLoading,showAlert]);
 
-    console.log(post)
+    // console.log(post)
 
-    useEffect(() =>{
-        fetchPost();
-        document.title = `thought Log`
-    },[fetchPost]);
+    // useEffect(() =>{
+    //     fetchPost();
+    //     document.title = `thought Log`
+    // },[fetchPost]);
 
-    if(isLoading){
-        return <Loading/>
-    }
+    // if(isLoading){
+    //     return <Loading/>
+    // }
 
 
     return <section>
