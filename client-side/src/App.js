@@ -20,9 +20,14 @@ function App() {
       <Route exact path='/' element={<HomePage/>}></Route>
       <Route exact path="/signup" element={<RegisterPage/>} ></Route>
       <Route exact path="/login" element={<LoginPage/>} ></Route>
-      {/* <Route exact path="/post/:id" element={<SinglePostPage/>}></Route> */}
-      <PrivateRoute path='/post/:id' element={<SinglePostPage/>} exact></PrivateRoute>
-      {/* <PrivateRoute path='/post/:id' exact><SinglePostPage/></PrivateRoute> */}
+      <Route 
+        path="/post/:id"
+        element={
+          <PrivateRoute>
+            <SinglePostPage/>
+          </PrivateRoute>
+        }
+      ></Route>
       <Route exact path="/create-comment" element={<CreateComment/>}></Route>
       <Route exact path="/comments/:id" element={<Comments/>}></Route>
       <Route exact path="/admin/create-post" element={<Post/>}></Route>
