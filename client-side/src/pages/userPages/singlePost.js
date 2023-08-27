@@ -14,42 +14,54 @@ function SinglePostPage(){
     const baseURL = `http://localhost:5000/api/v1/blog/${id}`;
     const [post,setPost] = useState(null);
     console.log(post)
-    const fetchPost = useCallback(async() =>{ 
+    
+    const fetchSinglePost = async() =>{
         setIsLoading(true)
         try {
-            const dataa = await axios.get(baseURL);
-            const {data} = dataa;
-            
-            if (data) {
-                console.log(data)
-                setPost(data)
-            } else {
-                setPost(null)
-            }
+            const resp = await fetch(baseURL)
+            const data = await resp.json();
+            setPost(data)
             setIsLoading(false)
+            console.log(data)
         } catch (error) {
-            showAlert(true,[error.response.data.msg],'danger')
-            console.log(error)
+            
         }
-    },[baseURL,setIsLoading,showAlert]);
-
-    console.log(post)
+        setIsLoading(false)
+    }
 
     useEffect(() =>{
-        fetchPost();
-        document.title = `thought Log`
-    },[fetchPost]);
+        // setIsLoading(true)
+        const u = async() =>{
+            setIsLoading(true)
+            try {
+                const resp = await fetch(baseURL)
+                const data = await resp.json()
+                setPost(data)
+                setIsLoading(false)
+                console.log(data)
+            } catch (error) {
+                console.log(error)
+            }
+            setIsLoading(false)
+        }
+        u();   
+    });
 
+    // useEffect(() =>{
+    //     fetchSinglePost()
+    //     document.title = 'thought log'
+    // },[fetchSinglePost])
+    
     if(isLoading){
         return <Loading/>
     }
 
-
     return <section className="container">
-        {console.log(post)}
+        {/* {console.log(post)} */}
         <div className="row">
+            <h3>single post</h3>
             <div className="column">
-                <div>{post.title}</div>
+                {/* <div>{post.title}</div> */}
             </div>
         </div>
         {alert.show && <Alert {...alert} removeAlert={showAlert}/>}
