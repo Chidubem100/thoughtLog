@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const createToken = ({payload}) =>{
     const token = jwt.sign(
         payload,
-        'secrete',
+        process.env.SECRETE,
         {
             expiresIn: '30d'
         }
@@ -14,7 +14,7 @@ const createToken = ({payload}) =>{
 }
 
 const verifyToken = ({token}) =>{
-   const x= jwt.verify(token, 'secrete')
+   const x= jwt.verify(token, process.env.SECRETE)
    return x;
 }
 
@@ -29,6 +29,7 @@ const attachCookiesToResponse = ({res,user}) =>{
         httpOnly:true,
         expires: new Date(Date.now() + oneDay),
         secure: process.env.NODE_ENV === 'production',
+        sameSite: "none",
         signed: true   
     });
 }

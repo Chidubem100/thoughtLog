@@ -10,7 +10,7 @@ import Post from  './pages/adminPages/post';
 import ResetPasswordPage from "./pages/userPages/resetPassword";
 import ForgotPasswordPage from "./pages/userPages/forgotPasssword";
 import { CreateComment, Comments } from "./pages/userPages/Comments";
-import PrivateRoute from "./pages/protectedRoute";
+import {PrivateRoute,ProtectedRoute} from "./pages/protectedRoute";
 
 function App() {
   
@@ -30,7 +30,17 @@ function App() {
       ></Route>
       <Route exact path="/create-comment" element={<CreateComment/>}></Route>
       <Route exact path="/comments/:id" element={<Comments/>}></Route>
-      <Route exact path="/admin/create-post" element={<Post/>}></Route>
+      <Route 
+        exact 
+        path="/admin/create-post" 
+        element={
+          // <PrivateRoute>
+            <ProtectedRoute>
+              <Post/>
+            </ProtectedRoute>
+          // </PrivateRoute>
+        }
+      ></Route>
       <Route path='/user/forgot-password' exact element={<ForgotPasswordPage/>}></Route>
       <Route path='/user/reset-password' exact element={<ResetPasswordPage/>} ></Route>
       <Route exact path="*" element={<ErrorPage/>}></Route>
