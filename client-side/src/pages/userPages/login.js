@@ -3,17 +3,19 @@ import { useGlobalConext } from "../../context";
 import axios from "axios";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate,useLocation} from "react-router-dom";
 import { useLocalState } from "../../utils/alert";
 import Alert from "../../components/Alert";
+import { addUserToLocalStorage,addToken } from "../../utils/localStorage";
 const baseURL = 'http://localhost:5000/api/v1/auth/login';
 
 function LoginPage(){
     const navigate = useNavigate();
-    const {saveUser} = useGlobalConext()
+    const location = useLocation();
+    const {setAuth} = useGlobalConext();
     const {showAlert,loading,setLoading,setSuccess,alert} = useLocalState();
-    const [val,setVal] = useState({email:'',password:''})
-    
+    const [val,setVal] = useState({email:'',password:''});
+    const from = location.state?.from?.pathname || "/";
 
     function handleChange(e){
         setVal({...val, [e.target.name]: e.target.value})
@@ -30,24 +32,30 @@ function LoginPage(){
         try {
             const {data} = await axios.post(baseURL,loginUser);
             const user = data.user;
+            // getSetCookie()
+            // cookies.get()
             console.log(user)
-            saveUser(user)
+            // console.log(data.headers.getSetCookie())
+            setAuth(user)
+            addUserToLocalStorage(user)
             setSuccess(true)
             setLoading(false)
             setVal({email:"",password:""});
             
+            // const x = getUserFromLocalStorgae()
+            // const y = getTokenFromLocalStorage()    
+            // showAlert({
+            //     text: `Welcome, ${user.username}.`,
+            //     type: 'success',
+            // });
             
-            showAlert({
-                text: `Welcome, ${user.username}.`,
-                type: 'success',
-            });
-            // saveUser(user)
-            navigate('/', {replace: true})
-             
+            // navigate(from, { replace: true });
+            navigate('/', from,{replace: true})
+            // navigate(state={from:location,replace:true}) 
         } catch (error) {
-            const { data } = error.response;
-            setLoading(false);
-            showAlert( true,  [data.msg]||'There was an error','danger' );
+            // const { data } = error.response;
+            // setLoading(false);
+            // showAlert( true,  [data.msg]||'There was an error','danger' );
             console.log(error)
         }
     }

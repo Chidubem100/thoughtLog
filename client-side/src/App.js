@@ -34,11 +34,11 @@ function App() {
         exact 
         path="/admin/create-post" 
         element={
-          // <PrivateRoute>
+          <PrivateRoute>
             <ProtectedRoute>
               <Post/>
             </ProtectedRoute>
-          // </PrivateRoute>
+          </PrivateRoute>
         }
       ></Route>
       <Route path='/user/forgot-password' exact element={<ForgotPasswordPage/>}></Route>
