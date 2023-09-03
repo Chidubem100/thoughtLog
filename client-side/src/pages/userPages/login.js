@@ -7,14 +7,19 @@ import { Link, useNavigate,useLocation} from "react-router-dom";
 import { useLocalState } from "../../utils/alert";
 import Alert from "../../components/Alert";
 import { addUserToLocalStorage,addToken } from "../../utils/localStorage";
+import {useCookies,CookiesProvider} from 'react-cookie'
 const baseURL = 'http://localhost:5000/api/v1/auth/login';
 
+
+
 function LoginPage(){
+
     const navigate = useNavigate();
     const location = useLocation();
-    const {setAuth} = useGlobalConext();
+    const {setAuth,saveUser} = useGlobalConext();
     const {showAlert,loading,setLoading,setSuccess,alert} = useLocalState();
     const [val,setVal] = useState({email:'',password:''});
+    // const [cookies, setCookie] = useCookies(["token"])
     const from = location.state?.from?.pathname || "/";
 
     function handleChange(e){
@@ -32,9 +37,11 @@ function LoginPage(){
         try {
             const {data} = await axios.post(baseURL,loginUser);
             const user = data.user;
-            // getSetCookie()
-            // cookies.get()
+            // cookies.set('access_token', data.headers['x-access-token'])
+            // setCookie("token", user)
             console.log(user)
+            saveUser(user)
+            // console.log(user)
             // console.log(data.headers.getSetCookie())
             setAuth(user)
             addUserToLocalStorage(user)
