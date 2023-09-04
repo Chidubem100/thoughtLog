@@ -12,7 +12,7 @@ function SinglePostPage(){
     const {alert,showAlert} = useLocalState()
     const baseURL = `http://localhost:5000/api/v1/blog/${id}`;
     const [post,setPost] = useState(null);
-    console.log(post)
+    // console.log(post)
     
     return <section>
         <h3>singlePost</h3>
