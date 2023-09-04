@@ -12,28 +12,30 @@ const AppProvider = ({children})=>{
 
     const saveUser = (user) =>{
         setUser(user)
-    }
+    };
 
-    const fetchUser = async() =>{
+    const fetchUser = useCallback(async() =>{
         try {
-            const {data} = await axios.get(showURL);
-            console.log(data.user)
-            saveUser(data.user)            
+            const resp = await fetch(
+                showURL,
+                {
+                    mode:'cors',
+                    // credentials:'include',
+                    // method:'GET',
+                }
+            );
+            // console.log(resp)
+            const user = await resp.json();
+            saveUser(user)            
         } catch (error) {
             console.log(error)
         }
-    }
+    },[]);
 
     useEffect(() =>{
         fetchUser();
     },[fetchUser]);
-
-    console.log(auth)
-    // const removeUser = () =>{
-    //     setUser(null)
-    // }
-
-
+    
     return <AppContext.Provider value={{
         isLoading,
         setIsLoading,
