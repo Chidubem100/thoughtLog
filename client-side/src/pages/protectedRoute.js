@@ -1,37 +1,24 @@
 import React from "react";
-import {useLocation,Navigate} from "react-router-dom";
-import { getUserFromLocalStorgae,getTokenFromLocalStorage } from "../utils/localStorage";
+import {Navigate,Outlet} from "react-router-dom";
 
+const user = JSON.parse(localStorage.getItem('user'));
+const accessToken = localStorage.getItem('accessToken');
 
-const PrivateRoute = ({children,...rest}) =>{
-    const location = useLocation();
-    
-    const token = getTokenFromLocalStorage();
-    const u = getUserFromLocalStorgae();
-    if(token || u){
-        return children    
-    }else{
-        return <Navigate to='/login' state={{ from: location }} replace/>
-    }
-}
-
-const ProtectedRoute = ({children,...rest}) =>{
-    
-    const x = getUserFromLocalStorgae();
-    console.log(x)
-    // const h = x.role;
-// const {username,role} = x;
-//     // console.log(h)
-//     // console.log(`${username}, ${role}`)
-//     // const 
-//     return {x.role:"admin"} ? children : <Navigate to='/unauthorized'/>;
-//     // if({role:"admin"}){
-    //     console.log(role)
-    //     return children
-    // }else{
-    //     return <Navigate to='/unauthorized'/>
-    // }    
-    
+const PrivateRoutes = () => {
+  
+  return accessToken ? <Outlet/> : <Navigate to="/login"/>
 };
 
-export  {ProtectedRoute,PrivateRoute};
+const ProtectedRoute = () =>{
+  
+  if(accessToken && user.role === 'admin'){
+
+    return <Outlet/>
+
+  }else{
+    
+    return <Navigate to="/unauthorized"/>  
+  }
+};
+
+export  {ProtectedRoute,PrivateRoutes};

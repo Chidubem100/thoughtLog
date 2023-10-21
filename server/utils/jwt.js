@@ -3,28 +3,28 @@ const jwt = require('jsonwebtoken');
 
 
 const createToken = ({payload}) =>{
-    const token = jwt.sign(
+    const accessToken = jwt.sign(
         payload,
         process.env.SECRETE,
         {
             expiresIn: '30d'
         }
     )
-    return token;
+    return accessToken
 }
 
-const verifyToken = ({token}) =>{
-   const x= jwt.verify(token, process.env.SECRETE)
+const verifyToken = ({accessToken}) =>{
+   const x= jwt.verify(accessToken, process.env.SECRETE)
    return x;
 }
 
 
 const attachCookiesToResponse = ({res,user}) =>{
-    const token = createToken({payload:user});
+    const accessToken = createToken({payload:user});
 
-    const oneDay = 1000*60*60*24;
+    const oneDay = 1000*60*60*60;
 
-    res.cookie('token', token,
+    res.cookie('accessToken', accessToken,
     {
         httpOnly:true,
         expires: new Date(Date.now() + oneDay),

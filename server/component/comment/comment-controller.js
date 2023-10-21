@@ -4,14 +4,15 @@ const {StatusCodes} = require("http-status-codes");
 
 const createComment = async(req,res) =>{
     const { comment} = req.body;
-    console.log(typeof req.body)
+    console.log(req.body)
     if(!comment){
         throw new BadRequestError("Comment body cannot be empty")
     }
     req.body.user = req.user.userId;
+    req.body.username = req.user.username;
+    
     const Ccomment = await  Comment.create(req.body);
-    console.log(typeof req.body)
-    console.log(typeof Ccomment)
+    
     res.status(StatusCodes.OK).json({sucesss:true, data: Ccomment})
 };
 

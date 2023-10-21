@@ -1,24 +1,20 @@
-const addUserToLocalStorage = (user) =>{
-    return localStorage.setItem('user', JSON.stringify(user));
-}
-const addToken = (token) =>{
-    return localStorage.setItem('token',JSON.stringify(token))
-}
-const getUserFromLocalStorgae = () =>{
-   const result = localStorage.getItem('user');
-    const user = result ? JSON.parse(result) : null;
-    return user
-};
+import axios from "axios";
 
-const getTokenFromLocalStorage = () =>{
-    const userToken = localStorage.getItem('token');
-    // const userToken = x ? JSON.parse(x) : null
-    return userToken;
-};
+const addAccessTokenToLocalStorage = (token) =>{
+    localStorage.setItem('accessToken', token)
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+}
+
+const addUserToLocalStorage = (token) =>{
+    return localStorage.setItem('refreshToken', token)    
+}
+
+const accessToken = () =>{
+    return localStorage.getItem('accessToken')
+}
 
 const removeUser =()=>{
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
+    localStorage.removeItem('accessToken');
 };
 
-export {getUserFromLocalStorgae,addUserToLocalStorage,getTokenFromLocalStorage,removeUser,addToken};
+export {addUserToLocalStorage,addAccessTokenToLocalStorage,removeUser,accessToken};

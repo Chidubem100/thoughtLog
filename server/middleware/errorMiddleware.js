@@ -23,6 +23,10 @@ const { StatusCodes } = require('http-status-codes');
           customError.msg = `No item found with id : ${err.value}`;
           customError.statusCode = 404;
         }
+        if (err.name === 'TokenExpiredError') {
+          customError.msg = `Session is expired. Please login again`;
+          customError.statusCode = 401;
+        }
       
         return res.status(customError.statusCode).json({ msg: customError.msg });
     };

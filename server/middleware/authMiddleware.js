@@ -1,24 +1,30 @@
 const {verifyToken} = require('../utils/jwt');
+const jwt = require('jsonwebtoken');
 const UnauthorizedError = require("../Errors/unauthorized-error");
 const {BadRequestError} = require("../Errors")
 
-const authenticateUser = (req,res,next) =>{
-    const token = req.signedCookies.token;
-    
 
-    try {
+function VerifyAccessToken(req,res,next){
+    const authHeader = req.headers.authorization;
 
-        const {username, userId, role} = verifyToken({token});
-        req.user = {username,userId,role}
-        console.log(token)
-        next();
-    } catch (error) {
-        res.status(401).json({msg:'Unauthenticated. Please sign in.'})
-        // throw new BadRequestError("Unauthenticated. Can't access the route")
-        // throw new Error("Unauthenticated. cant access this route")
-        // console.log(error)
+    if(!authHeader || !authHeader.startsWith("Bearer")){
+        throw new UnauthorizedError("Authentication Failed!!")
     }
-};
+
+    const accessToken = authHeader.split(' ')[1];
+    
+    try {
+       
+        const payload = jwt.verify(accessToken, process.env.SECRETE);
+        req.user = { userId: payload.userId, username: payload.username, role: payload.role }
+        next();
+       
+    } catch (error) {
+        console.log(error)
+        res.status(401).json({success:false, msg: 'Unauthenticated!'})
+    }
+        
+}
 
 function authorizeUser(...roles) {
     return (req,res,next) =>{
@@ -32,6 +38,6 @@ function authorizeUser(...roles) {
 
 
 module.exports = {
-    authenticateUser,
     authorizeUser,
+    VerifyAccessToken
 }
