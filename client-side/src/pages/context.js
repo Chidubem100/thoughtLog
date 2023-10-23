@@ -10,6 +10,8 @@ const AppProvider = ({children})=>{
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(localStorage.getItem('accessToken'))
     const [commentArr, setCommentArr] = useState([]);
+    const [userRole, setUserRole] = useState('user');
+
 
     console.log(token) // remember to remove b4 pushing to production
     
@@ -63,7 +65,8 @@ const AppProvider = ({children})=>{
         setToken,
         commentArr,
         setCommentArr,
-        
+        userRole,
+        setUserRole
     }}>{children}</AppContext.Provider>
 }
 

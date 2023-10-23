@@ -43,6 +43,7 @@ function LoginPage(){
             
             
             if(response.ok){
+                    
                 const data = await response.json();
                 const {accessToken} = data;
                 
@@ -58,7 +59,7 @@ function LoginPage(){
                 showAlert(true,'successfully logged in!!', 'success');
                 
                 navigate(from,{replace:true})
-                    
+                window.location.reload()    
             }else{
                 const data = await response.json();
                 showAlert(true, data.msg||'Login-in failed', 'danger');
