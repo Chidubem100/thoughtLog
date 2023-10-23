@@ -1,14 +1,15 @@
 import React,{useState,useEffect} from "react";
-import axios from "axios";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { Link } from "react-router-dom";
 import { useLocalState } from "../../utils/alert";
 import Alert from "../../components/Alert";
+import {addAccessTokenToLocalStorage } from "../../utils/localStorage";
+import { useGlobalConext } from "../context";
 const baseURL = 'http://localhost:5000/api/v1/auth/signup';
 
 function RegisterPage(){
-    
+    const {setUser, setToken} = useGlobalConext();
     const {showAlert,alert,loading,setLoading,setSuccess} = useLocalState();
     const [val,setVal] = useState({username:'',email:'',password:''})
     
@@ -27,22 +28,50 @@ function RegisterPage(){
         const newUser = {email,username,password};
 
         try {
-            const {data} = await axios.post(baseURL,newUser);
-            // console.log(data)
-            setSuccess(true);
-            setVal({username:'',email:'',password:''});
-            showAlert(true,[data.msg], 'success');
-            // <Modal/>
+            const response = await fetch(baseURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newUser),
+            });
+            if(response.ok){
+                const data = await response.json();
+                const {accessToken} = data;
+
+                const user = JSON.stringify(data.userPayload);
+                localStorage.setItem('user', user);
+                addAccessTokenToLocalStorage(accessToken);
+
+                setToken(accessToken)
+                setUser(data.userPayload);
+                
+                setSuccess(true);
+                setVal({username:'',email:'',password:''});
+                showAlert(true,'Registration successful!!', 'success');
+
+                window.location.href = '/'
+                
+            }else{
+                const data = await response.json();
+                showAlert(true, data.msg||'Sign-up failed', 'danger');
+                console.log('error occurred!')
+            }
+            
         } catch (error) {
-            const { msg } = error.response.data;
-            showAlert( true,  [msg]||'There was an error','danger' );
+            console.log(error)
+            showAlert(true,'Something went wrong. Try again!!', 'danger');
         }
         setLoading(false)
     }
 
     useEffect(() =>{
         document.title = 'Sign-up'
-    },[]);
+        const storedToken = localStorage.getItem('accessToken');
+        if(storedToken){
+            setToken(storedToken)
+        }
+    },[setToken]);
     
     return <section className="form-main container">   
    

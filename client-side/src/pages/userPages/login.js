@@ -1,30 +1,25 @@
 import React,{useState,useEffect} from "react";
-import { useGlobalConext } from "../../context";
-import axios from "axios";
+import { useGlobalConext } from "../context"
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { Link, useNavigate,useLocation} from "react-router-dom";
+import { Link,useNavigate, useLocation} from "react-router-dom";
 import { useLocalState } from "../../utils/alert";
 import Alert from "../../components/Alert";
-import { addUserToLocalStorage,addToken } from "../../utils/localStorage";
-import {useCookies,CookiesProvider} from 'react-cookie'
+import { addAccessTokenToLocalStorage } from "../../utils/localStorage";
 const baseURL = 'http://localhost:5000/api/v1/auth/login';
 
-
-
 function LoginPage(){
-
-    const navigate = useNavigate();
+    let navigate = useNavigate();
     const location = useLocation();
-    const {setAuth,saveUser} = useGlobalConext();
+    const {from} = location.state || {from :{pathname: '/'}}
+    const {setUser,setToken} = useGlobalConext();
     const {showAlert,loading,setLoading,setSuccess,alert} = useLocalState();
     const [val,setVal] = useState({email:'',password:''});
-    // const [cookies, setCookie] = useCookies(["token"])
-    const from = location.state?.from?.pathname || "/";
-
+    
     function handleChange(e){
         setVal({...val, [e.target.name]: e.target.value})
     }
+
     async function handleForm(e){
         e.preventDefault();
         
@@ -34,42 +29,59 @@ function LoginPage(){
         setLoading(true)
         const {email,password} = val;
         const loginUser = {email,password};
+        
         try {
-            const {data} = await axios.post(baseURL,loginUser);
-            const user = data.user;
-            // cookies.set('access_token', data.headers['x-access-token'])
-            // setCookie("token", user)
-            console.log(user)
-            saveUser(user)
-            // console.log(user)
-            // console.log(data.headers.getSetCookie())
-            setAuth(user)
-            addUserToLocalStorage(user)
-            setSuccess(true)
-            setLoading(false)
-            setVal({email:"",password:""});
+            const response = await fetch(baseURL, {
+                method: 'POST',
+                mode: "cors",
+                body: JSON.stringify(loginUser),
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include'
+            });
             
-            // const x = getUserFromLocalStorgae()
-            // const y = getTokenFromLocalStorage()    
-            // showAlert({
-            //     text: `Welcome, ${user.username}.`,
-            //     type: 'success',
-            // });
             
-            // navigate(from, { replace: true });
-            navigate('/', from,{replace: true})
-            // navigate(state={from:location,replace:true}) 
+            if(response.ok){
+                    
+                const data = await response.json();
+                const {accessToken} = data;
+                
+                const user = JSON.stringify(data.userPayload)
+                localStorage.setItem('user', user)
+                addAccessTokenToLocalStorage(accessToken);
+
+                setToken(accessToken)
+                setUser(data.userPayload);
+                
+                setSuccess(true)
+                setVal({email:"",password:""});
+                showAlert(true,'successfully logged in!!', 'success');
+                
+                navigate(from,{replace:true})
+                window.location.reload()    
+            }else{
+                const data = await response.json();
+                showAlert(true, data.msg||'Login-in failed', 'danger');
+                console.log('error occurred!')
+            }
+            
+            
         } catch (error) {
-            // const { data } = error.response;
-            // setLoading(false);
-            // showAlert( true,  [data.msg]||'There was an error','danger' );
             console.log(error)
+            showAlert(true,'Something went wrong. Try again!!', 'danger');
         }
+        setLoading(false)
+       
     }
     
     useEffect(() =>{
         document.title = 'Login'
-    },[]);
+        const storedToken = localStorage.getItem('accessToken');
+        if(storedToken){
+            setToken(storedToken)
+        }
+    },[setToken]);
 
     return <section className="form-main container">   
     

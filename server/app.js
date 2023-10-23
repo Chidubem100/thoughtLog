@@ -12,21 +12,22 @@ const errorHandlerMiddleware = require('./middleware/errorMiddleware');
 const appRouter = require('../server/component/index');
 const starter = require('./seedDB');
 const credentials = require('./middleware/credentials');
-const corsOptions = require('./config/corsOptions');
 const app = express();
 
+const corsOp = {
+    origin: 'http://localhost:3000',
+    credentials: true
+}
 
 // APP CONFIG
 // starter();
 app.use(express.json());
 app.use(credentials);
-app.use(cors(corsOptions));
-// app.use(cors())
+app.use(cors(corsOp))
 app.use(cookieParser(process.env.SECRETE))
 app.use(morgan('tiny'));
 app.use(express.urlencoded({extended:false}))
 app.use("/api/v1",appRouter);
-// app.use(cors({origin:'*',credentials:true,optionsSuccessStatus:200}))
 app.use((req,res,next) =>{
     res.setHeader('Access-Control-Allow-Origin', '*')
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE')

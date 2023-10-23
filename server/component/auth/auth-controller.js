@@ -5,6 +5,7 @@ const {attachCookiesToResponse} = require('../../utils/jwt');
 const crypto = require('crypto');
 const {sendResetPasswordMail} = require('../../utils/sendResetPasswordMail');
 const createHash = require('../../utils/createHash');
+const jwt = require('jsonwebtoken')
 
 const register = async(req,res) =>{
     const {email,password,username} = req.body;
@@ -26,31 +27,37 @@ const register = async(req,res) =>{
     const isFirstAcc = await User.countDocuments({}) === 0;
     const isSecond = await User.countDocuments({}) === 1;
 
+    
+
+
     if (isFirstAcc) {
         const role = 'admin'
         const user = await User.create({email,username,password,role});
-        console.log(user)
-        const tokenUser = {username: user.username, userId: user._id, role: user.role}
-        attachCookiesToResponse({res, user:tokenUser});
-        return res.status(StatusCodes.CREATED).json({user: tokenUser,msg:'Please check your mail for verification Link'});
+        const userPayload = {username: user.username, userId: user._id, role: user.role}
+        const accessToken = jwt.sign(userPayload, process.env.SECRETE,{expiresIn:'6m'});
+
+        res.cookie('accessToken', accessToken, {signed:true,httpOnly:true,secure:false, maxAge: 60*60*60*1000})
+        
+        return res.status(StatusCodes.CREATED).json({success:true, userPayload,accessToken})
+
     }else if(isSecond){
         const role = 'moderator'
         const user = await User.create({email,username,password,role});
-        console.log(user)
-        const tokenUser = {username: user.username, userId: user._id, role: user.role}
-        attachCookiesToResponse({res, user:tokenUser});
-        return res.status(StatusCodes.CREATED).json({user: tokenUser,msg:'Please check your mail for verification Link'});
+        const userPayload = {username: user.username, userId: user._id, role: user.role}
+        const accessToken = jwt.sign(userPayload, process.env.SECRETE,{expiresIn:'1m'});            
+        res.cookie('accessToken', accessToken, {signed:true,httpOnly:true,secure:false, maxAge: 60*60*60*1000})    
+       return res.status(StatusCodes.CREATED).json({success:true, userPayload,accessToken})
     }else{
         const role = 'user'
         const user = await User.create({email,username,password,role});
-        console.log(user)
-        const tokenUser = {username: user.username, userId: user._id, role: user.role}
-        attachCookiesToResponse({res, user:tokenUser});
-        return res.status(StatusCodes.CREATED).json({user: tokenUser, msg:'Please check your mail for verification Link'});
+        const userPayload = {username: user.username, userId: user._id, role: user.role};            
+        const accessToken = jwt.sign(userPayload, process.env.SECRETE,{expiresIn:'1m'});
+
+        res.cookie('accessToken', accessToken, {signed:true,httpOnly:true,secure:false, maxAge: 60*60*60*1000})
+        
+        return res.status(StatusCodes.CREATED).json({success:true, userPayload,accessToken})
     }
 }
-
-
 
 const login = async(req,res) =>{
     const {email,password} = req.body;
@@ -64,16 +71,33 @@ const login = async(req,res) =>{
         throw new customErr.BadRequestError('Invalid credentials. Try again')
     }
 
-    // console.log(user)
     const isPasswordCorrect = await user.comparePassword(password);
     if(!isPasswordCorrect){
         throw new customErr.BadRequestError('Invalid credentials. Try again')
     }
 
-    const tokenUser = {username: user.username, userId: user._id, role: user.role}
-    attachCookiesToResponse({res, user:tokenUser});
-    return res.status(StatusCodes.CREATED).json({user: tokenUser});
+    const userPayload = {username: user.username, userId: user._id, role: user.role}
+    const accessToken = jwt.sign(userPayload, process.env.SECRETE,{expiresIn:'80h'});
+
+    res.cookie('accessToken', accessToken, {signed:true,httpOnly:true,secure:false, maxAge: 60*60*60*1000})
+
+
+    return res.status(StatusCodes.CREATED).json({success:true, userPayload,accessToken})
+    
 };
+
+const getAccessToken = (req,res) =>{
+    const refreshToken = req.body.refreshToken;
+    jwt.verify(refreshToken, process.env.SECRETE, (err,user) =>{
+        if(err){
+            return res.status(403).json({success:false, msg: 'Refresh token invalid'})
+        }
+        // generate new accessToken
+        const userDetails = {username: user.username,}
+        const accessToken = jwt.sign(tokenUser, process.env.SECRETE,{expiresIn:'6d'});
+        res.status(201).json({success:true, userDetails,accessToken})
+    })
+}
 
 const showCurrentUser = async(req,res) =>{
     res.status(StatusCodes.OK).json({user: req.user})
@@ -151,6 +175,7 @@ const logout = async(req,res) =>{
 module.exports = {
     register,
     login,
+    getAccessToken,
     showCurrentUser,
     forgotPassword,
     resetPassword,

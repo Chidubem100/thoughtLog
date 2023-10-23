@@ -6,7 +6,7 @@ const Comment = require('./component/comment/comment');
 const starter = async () =>{
     try {
         await ConnectDB()
-        // await User.deleteMany();
+        await User.deleteMany();
         await Post.deleteMany();
         await Comment.deleteMany();
         console.log('success!')

@@ -2,23 +2,29 @@ import React,{useState,useEffect} from "react";
 import { useGlobalConext } from "../context"
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { useNavigate} from "react-router-dom";
+import { useNavigate, useParams} from "react-router-dom";
 import { useLocalState } from "../../utils/alert";
 import Alert from "../../components/Alert";
 import axios from "axios";
 
-const baseURL = 'http://localhost:5000/api/v1/admin/';
-
-
-
-function Post(){
+function UpdatePost({match}){
+    const {postId} = useParams();
     const {token} = useGlobalConext();
     const navigate = useNavigate();  
     const {showAlert,loading,setLoading,setSuccess,alert} = useLocalState();
     const [post, setPost] = useState({title:'', body:'', image:null})
-    
+    const [isSubmitting, setIsSubmitting] = useState(false)
+
+    useEffect(() =>{
+        axios.get(`http://localhost:5000/api/v1/blog/${postId}`).then((resp) =>{
+            setPost(resp.data.data)
+        }).catch((e) =>{
+            console.log(e)
+        })
+    },[postId])
+
     const handleImage = (e) =>{
-        setPost({...post.image, [e.target.name]: e.target.files[0]})
+        setPost({...post, image:e.target.files[0]})
     };
     
     const handleChange = (e) =>{
@@ -27,7 +33,7 @@ function Post(){
 
     const handleForm = async(e) =>{
         e.preventDefault();
-
+        setIsSubmitting(true)
         const formData = new FormData();
         formData.append('title', post.title)
         formData.append('body', post.body)
@@ -38,7 +44,7 @@ function Post(){
             navigate('/login')
         }
 
-        await axios.post(baseURL, formData,{
+        await axios.patch(`http://localhost:5000/api/v1/admin/${postId}`, formData,{
             headers:{
                 'Content-Type': 'multipart/form-data',                  
                 Authorization: `Bearer ${token}`
@@ -49,7 +55,7 @@ function Post(){
                 setSuccess(true)
                 setLoading(false)
                 setPost({title:"", body: "", image:null})
-                navigate("/")
+                navigate("/admin/manage-posts")
                 console.log(response.data)
             }
             if(response.status === 400){
@@ -58,12 +64,14 @@ function Post(){
         }).catch((err) =>{
             showAlert("true", err.message||"Something went wrong. Try again!", "danger")
             console.log(err.message)
+        }).finally(() =>{
+            setIsSubmitting(false)
         })
 
        
     }
     useEffect(() =>{
-        document.title = 'create post'
+        document.title = 'update post'
     },[]);
 
     return <section className="form-main container">   
@@ -71,7 +79,7 @@ function Post(){
                 <Form className={loading? 'sect-form form-loading' : 'sect-form'} onSubmit={handleForm}>
                     {alert.show && <Alert {...alert} removeAlert={showAlert}/>}
                     
-                    <h4>Create post</h4>
+                    <h4>Edit post</h4>
                     <Form.Group className="mb-3" >
                         <Form.Label>Title: </Form.Label>
                         <Form.Control 
@@ -112,4 +120,4 @@ function Post(){
     </section>
 }
 
-export default Post;
+export default UpdatePost;
