@@ -7,7 +7,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 
-function AppNavbar(){
+function AppNavbar(){ 
     
     const {token} = useGlobalConext();
     const {logoutUser} = LogoutUtils();
