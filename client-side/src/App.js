@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter,Route,Routes, json } from "react-router-dom";
 import HomePage from "./pages/userPages/home";
 import LoginPage from "./pages/userPages/login";
-import Navbar from "./components/Navbar";
+import AppNavbar from "./components/Navbar";
 import ErrorPage from "./pages/errorPage";
 import RegisterPage from "./pages/userPages/register";
 import SinglePostPage from "./pages/userPages/singlePost";
@@ -34,7 +34,7 @@ function App() {
 
   return <BrowserRouter>
     
-    {userRole === 'admin'  ? <AdminSidebar/> : <Navbar/>}
+    {userRole === 'admin'  ? <AdminSidebar/> : <AppNavbar/>}
    
     <Routes>
       <Route exact path='/' element={<HomePage/>}></Route>
