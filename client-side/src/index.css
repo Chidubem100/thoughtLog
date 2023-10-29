@@ -254,3 +254,38 @@ h5 {
 .form-btn{
   background: #155724;
 }
+
+.sidebar-div{
+  display: flex;
+  /* justify-content: space-around; */
+  align-items: center;
+  border: 1px solid #425e16;
+  background-color: #425e16;
+}
+.sidebar-child{
+  width: 30%;
+  padding: 10px;
+  color: var(--primary-100);
+
+}
+.sidebar-ul{
+  text-decoration: none;
+  /* background-color: #425e16; */
+  color: var(--primary-100);
+  height: 60vh;
+  padding: 10px;
+}
+.sidebar-li{
+  text-decoration: none;
+  margin: 14px;
+  padding: 10px;
+  color: var(--primary-100);
+  border: 1px solid #425e16;
+  border-width: 2px;
+  background: #425e16;
+  border-radius: 5px;
+}
+.li-link{
+  color: var(--primary-100);
+  text-decoration: none;
+}
