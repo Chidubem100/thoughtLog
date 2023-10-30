@@ -16,8 +16,8 @@ const app = express();
 
 const corsOp = {
     // origin: 'http://192.168.178.191:3000',
-    origin: 'http://192.168.200.176:3000',
-    // origin: 'http://localhost:3000',
+    // origin: 'http://192.168.200.176:3000',
+    origin: 'http://localhost:3000',
     credentials: true
 }
 

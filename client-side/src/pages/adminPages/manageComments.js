@@ -5,6 +5,8 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { useLocalState } from "../../utils/alert";
 import Alert from "../../components/Alert";
+import Table from 'react-bootstrap/Table';
+import Button from 'react-bootstrap/Button';
 const baseURL = 'http://localhost:5000/api/v1/admin/allComment'
 
 
@@ -60,7 +62,7 @@ function ManageComments(){
             <h4 style={{textAlign:'center'}}>Manage Comments</h4>
             <div className="row">
                 {!comments ? <h5>No comments available</h5> :
-                <table>
+                <Table striped bordered hover>
                     <thead>
                         <tr>
                             
@@ -77,12 +79,12 @@ function ManageComments(){
                                 return <tr key={c.id}>
                                     
                                     <td>{c.comment}</td>
-                                    <td><button onClick={()=>handleDelete(c.id)}>Delete</button></td>
+                                    <td><Button variant="outline-danger" size="sm" onClick={()=>handleDelete(c.id)}>Delete</Button></td>
                                 </tr>
                             })
                         }
                     </tbody>
-                </table>}
+                </Table>}
             </div>
         </div>
     </section>

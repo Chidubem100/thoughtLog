@@ -5,7 +5,9 @@ import { useNavigate,useParams } from "react-router-dom";
 import axios from 'axios';
 import { useLocalState } from "../../utils/alert";
 import { CreateComment } from "./Comments";
-
+import Card from 'react-bootstrap/Card';
+import Form from 'react-bootstrap/Form';
+import Button from "react-bootstrap/esm/Button";
 
 function SinglePostPage(){
     const navigate = useNavigate();
@@ -120,56 +122,76 @@ function SinglePostPage(){
         return <h2>No Post found!!</h2> 
     }else{
         const {postId,postTitle,postBody,postComment,postDate,postImage} = post;
-        return <section className="container-fluid">
-        
-            <h3>{postTitle}</h3>
-            <span>{postDate.slice(0,10)}</span>
-            <div>
-                <img src={postImage} alt={postTitle}/>
-            </div>
-            <p>{postBody}</p>
-
-            <article style={{border:'solid black 2px'}} >
-                <h4>Comments</h4>
-                {
+        return <section >
+            
+            <Card style={{marginTop:'6px',border:'1px solid #425e16'}}>
+                <Card.Header style={{backgroundColor: 'rgb(91,133,26)',color: '#e2e0ff', textAlign:'center',fontWeight:'Bold'}}>{postTitle}</Card.Header>
+                {postImage ? <Card.Img variant="top" src={postImage} ></Card.Img> : ''}
+                <Card.Body>
+                    <Card.Text>{postBody}</Card.Text>
+                </Card.Body>
+                <Card.Footer>
+                    <small className="text-muted">Posted on: {postDate.slice(0,10)}</small>
+                    
+                </Card.Footer>
+            
+                <Card.Body>            
+                
+                    
+                    {
                     postComment.length < 1 ? (<p>No Comment Available Now!</p>) : 
                     (
                         
                         postComment.map((c) =>{
                             const {id,comment,username} = c;
                            
-                          return  <div key={id} className="column" style={{border:'solid blue 1px'}}>
-                                    {editComment.id === id ? <div>
-                                        <input 
-                                            type="text" 
-                                            name="comment" 
-                                            value={editComment.comment}
-                                            onChange={handleEditCommentChange}
-                                        />
-                                        <button onClick={handleSaveComment}>Save</button>
-                                    </div> 
+                          return  <Card key={id} style={{border:'solid #425e16 1px'}} >
+                                    {editComment.id === id ? <Form>
+                                        <h5 style={{textAlign:'center'}}>Edit Commment</h5>
+                                        <Form.Group>
+                                            <Form.Control 
+                                                
+                                                type="text"
+                                                name="comment" 
+                                                value={editComment.comment}
+                                                onChange={handleEditCommentChange}
+                                                
+                                            />
+                                        </Form.Group>
+                                        <Button style={{backgroundColor: '#425e16', color:'#e2e0ff'}} onClick={handleSaveComment}>Save</Button>
+                                        
+                                    </Form> 
                                         : 
-                                    <div>
-                                            <h6>{username}</h6> 
-                                            <span>{comment}</span>
-                                            <br/>
-                                            {accessT && user.username === username? <button className="btn btn-primary" onClick={() =>handleCommentEdit(id,comment)} >Edit Comment</button> : ''} 
+                                        
+                                    <Card style={{border:'1px #425e16 solid', borderRadius:'7px'}}>
+                                        <Card.Title style={{textAlign:'center'}}>Comments</Card.Title>
+                                        
+                                        <Card.Body>
+                                            <Card.Subtitle style={{textTransform:'capitalize'}} className="mb-2 text-muted">{username}</Card.Subtitle>
+                                            <Card.Text>{comment}</Card.Text>
+                                            
+                                            {accessT && user.username === username? <Button variant="outline-primary" size="sm" onClick={() =>handleCommentEdit(id,comment)} >Edit Comment</Button> : ''} 
+                                        </Card.Body>
+                                        
 
-                                    </div>
+                                    </Card>
                                 
                                 }
 
                                 
-                                
-                            </div>
+                                {accessT && user ? <CreateComment postId={postId} /> : ''}
+                            </Card>
                         })
                     
                     )
-
-                    
                 }
-                <CreateComment postId={postId} />
-            </article>
+                
+            
+                </Card.Body>
+            
+                
+            </Card>
+            
         </section>
     }
     
