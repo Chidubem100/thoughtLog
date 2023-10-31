@@ -3,12 +3,13 @@ const mongoose = require('mongoose');
 
 
 
-async function ConnectDB(){
-    const dburi = process.env.DBUri;
+async function ConnectDB(uri){
+    // const dburi = process.env.DBUri;
     try {
-       await mongoose.connect(dburi);
+       await mongoose.connect(uri);
        log.info("Database connected")
     } catch (error) {
+        console.log(error)
         process.exit(1);     
     }
 }

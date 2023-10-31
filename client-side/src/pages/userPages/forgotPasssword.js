@@ -33,8 +33,8 @@ function ForgotPasswordPage(){
             setVal({email:""})
             showAlert(true, [data.msg], "success")
         } catch (error) {
-            console.log(error)
-            showAlert(true,[error.response.data.msg]||"Error occured.Try again", 'danger')
+            setVal({email:""})
+            showAlert(true,"Error occured.Try again", 'danger')
             setLoading(false)
         }
     }
