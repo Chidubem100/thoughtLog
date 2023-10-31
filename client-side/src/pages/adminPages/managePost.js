@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import Loading from "../loading";
 import { useGlobalConext } from "../context";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { useLocalState } from "../../utils/alert";
-import Alert from "../../components/Alert";
+import Table from 'react-bootstrap/Table';
+import Button from 'react-bootstrap/Button';
 const baseURL = 'http://localhost:5000/api/v1/blog/';
 
 
@@ -26,7 +26,7 @@ function ManagePosts(){
             if(resp){
                 showAlert(true,"User have been deleted successfully", "danger")
             }
-            // window.location.reload()
+            
         }).catch((err) =>{
             setPosts(posts)
             console.log(err)
@@ -42,7 +42,7 @@ function ManagePosts(){
         }).then((resp) =>{
             if(resp){
                 setPosts(resp.data.data)
-                console.log(resp.data)
+                
                 setIsLoading(false)
                 setSuccess(true)
             }
@@ -57,7 +57,7 @@ function ManagePosts(){
             <p>{posts.length} Blog posts</p>
             <div className="row">
                 {!posts ? <h5>No post available</h5> :
-                <table>
+                <Table striped bordered hover>
                     <thead>
                         <tr>
                             <th>
@@ -73,13 +73,13 @@ function ManagePosts(){
                                 return <tr key={p.id}>
                                     <td>{p.body}</td>
                                     <td>{p.title}</td>
-                                    <td><button onClick={()=>{navigate(`/admin/update-post/${p.id}`)}}>Update</button></td>
-                                    <td><button onClick={()=>handleDelete(p.id)}>Delete</button></td>
+                                    <td><Button variant="outline-primary" size="sm" onClick={()=>{navigate(`/admin/update-post/${p.id}`)}}>Update</Button></td>
+                                    <td><Button variant="outline-danger" size="sm" onClick={()=>handleDelete(p.id)}>Delete</Button></td>
                                 </tr>
                             })
                         }
                     </tbody>
-                </table>}
+                </Table>}
             </div>
         </div>
     </section>

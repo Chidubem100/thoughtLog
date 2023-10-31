@@ -5,6 +5,8 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { useLocalState } from "../../utils/alert";
 import Alert from "../../components/Alert";
+import Table from 'react-bootstrap/Table';
+import Button from 'react-bootstrap/Button';
 const baseURL = 'http://localhost:5000/api/v1/admin/users'
 
 
@@ -65,7 +67,7 @@ function Manageusers(){
                 <p>There are <b>{users.length}</b> registered users</p>
             </div>
             <div className="row">
-                <table>
+                <Table striped bordered hover>
                     <thead>
                         <tr>
                             <th>
@@ -81,11 +83,11 @@ function Manageusers(){
                             return <tr key={u._id}>
                                 <td>{u.username}</td>
                                 <td>{u.email}</td>
-                                <td><button onClick={()=>handleDelete(u._id)}>Delete</button></td>
+                                <td><Button size='sm' variant="outline-danger" onClick={()=>handleDelete(u._id)}>Delete</Button></td>
                             </tr>
                         })}
                     </tbody>
-                </table>
+                </Table>
             </div>
         </div>
     </section>
