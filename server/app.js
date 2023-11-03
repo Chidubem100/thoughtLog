@@ -48,8 +48,8 @@ app.use(errorHandlerMiddleware)
 const port = process.env.PORT || 5000;
 const start = async() =>{
     try {
-        await ConnectDB(process.env.MONGO_URI);
-        // await ConnectDB(process.env.DBUri);
+        // await ConnectDB(process.env.MONGO_URI);
+        await ConnectDB(process.env.DBUri);
         app.listen(port, () =>{
             log.info("Server is running on port " + port) 
         });

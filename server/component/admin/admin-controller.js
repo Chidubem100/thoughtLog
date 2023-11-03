@@ -107,6 +107,7 @@ const updatePost = async(req,res) =>{
 
 const createPost = async(req,res) =>{
     const {body} = req.body;
+    
     if(!body){
         throw new BadRequestError("Body of the post cannot be empty")
     }
@@ -114,7 +115,7 @@ const createPost = async(req,res) =>{
 
     if (req.file) req.body.image = req.file.path;
     const post = await Post.create(req.body);
-    // console.log(typeof req.body)
+    
     return res.status(StatusCodes.CREATED).json({success: true, data: post})
     
 };

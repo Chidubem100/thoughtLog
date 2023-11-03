@@ -6,8 +6,7 @@ import Alert from "../../components/Alert";
 import { useGlobalConext } from "../context";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-// import Form from 'react-bootstrap/Form';
-// import Button from "react-bootstrap/esm/Button";
+
 const baseURL = 'http://localhost:5000/api/v1/comment/create';
 
 

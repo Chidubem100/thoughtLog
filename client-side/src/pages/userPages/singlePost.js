@@ -126,7 +126,7 @@ function SinglePostPage(){
             
             <Card className="container" style={{marginTop:'6px',border:'1px solid #425e16'}}>
                 <Card.Header style={{backgroundColor: 'rgb(91,133,26)',color: '#e2e0ff', textAlign:'center',fontWeight:'Bold'}}>{postTitle}</Card.Header>
-                {postImage ? <Card.Img variant="top" src={postImage} ></Card.Img> : ''}
+                {postImage !== 'null' ? <Card.Img variant="top" src={postImage} ></Card.Img> : ' '}
                 <Card.Body>
                     <Card.Text>{postBody}</Card.Text>
                 </Card.Body>
