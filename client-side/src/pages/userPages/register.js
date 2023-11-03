@@ -96,13 +96,15 @@ function RegisterPage(){
                         <Form.Control type="password" placeholder="Password" name="password" value={val.password} onChange={handleChange}/>
                     </Form.Group>
             
-                    <Button className="form-btn" disabled={loading} style={{background:'#e2e0ff',fontWeight:'bold',color:'#425e16', border:'none'}} type="submit">Submit</Button>
+                    <Button  disabled={loading} style={{fontSize:'18px',width: '100%',background:'#e2e0ff',fontWeight:'bold',color:'#425e16', border:'none'}} type="submit">Submit</Button>
 
-                    <div style={{marginTop:'7px'}}>
+                    <div style={{marginTop:'7px', textAlign:'center'}}>
                         <p>Already a user? <Link to='/login' style={{color:'#e2e0ff',textDecoration:'none'}}>Login here</Link></p>
                     </div>
                 
                 </Form>
+            
+
             
     </section>
 }

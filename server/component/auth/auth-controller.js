@@ -14,6 +14,10 @@ const register = async(req,res) =>{
         throw new customErr.BadRequestError('Please provide the needed values')
     }
 
+    if(password.length < 6){
+        throw new customErr.BadRequestError("Password should be longer than 6 characters")
+    }
+
     const isEmailAlreadyExist = await User.findOne({email});
     if(isEmailAlreadyExist){
         throw new customErr.BadRequestError('Email already exist.')

@@ -124,11 +124,12 @@ function SinglePostPage(){
         const {postId,postTitle,postBody,postComment,postDate,postImage} = post;
         return <section >
             
-            <Card style={{marginTop:'6px',border:'1px solid #425e16'}}>
+            <Card className="container" style={{marginTop:'6px',border:'1px solid #425e16'}}>
                 <Card.Header style={{backgroundColor: 'rgb(91,133,26)',color: '#e2e0ff', textAlign:'center',fontWeight:'Bold'}}>{postTitle}</Card.Header>
-                {postImage ? <Card.Img variant="top" src={postImage} ></Card.Img> : ''}
+                {postImage !== 'null' ? <Card.Img variant="top" src={postImage} ></Card.Img> : ' '}
                 <Card.Body>
-                    <Card.Text>{postBody}</Card.Text>
+                    {postBody}
+                    {/* <Card.Text style={{textAlign: 'center'}} >{postBody}</Card.Text> */}
                 </Card.Body>
                 <Card.Footer>
                     <small className="text-muted">Posted on: {postDate.slice(0,10)}</small>
@@ -146,6 +147,8 @@ function SinglePostPage(){
                             const {id,comment,username} = c;
                            
                           return  <Card key={id} style={{border:'solid #425e16 1px'}} >
+                                        
+
                                     {editComment.id === id ? <Form>
                                         <h5 style={{textAlign:'center'}}>Edit Commment</h5>
                                         <Form.Group>
@@ -164,7 +167,7 @@ function SinglePostPage(){
                                         : 
                                         
                                     <Card style={{border:'1px #425e16 solid', borderRadius:'7px'}}>
-                                        <Card.Title style={{textAlign:'center'}}>Comments</Card.Title>
+                                        {/* <Card.Title style={{textAlign:'center'}}>Comments</Card.Title> */}
                                         
                                         <Card.Body>
                                             <Card.Subtitle style={{textTransform:'capitalize'}} className="mb-2 text-muted">{username}</Card.Subtitle>
@@ -179,13 +182,14 @@ function SinglePostPage(){
                                 }
 
                                 
-                                {accessT && user ? <CreateComment postId={postId} /> : ''}
+                                
                             </Card>
                         })
                     
                     )
+                    
                 }
-                
+                 {accessT && user ? <CreateComment postId={postId} /> : ''}
             
                 </Card.Body>
             

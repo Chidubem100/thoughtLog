@@ -32,6 +32,8 @@ function Post(){
         formData.append('title', post.title)
         formData.append('body', post.body)
         formData.append('image', post.image)
+      
+        
         
         if(!token){
             setLoading(false)

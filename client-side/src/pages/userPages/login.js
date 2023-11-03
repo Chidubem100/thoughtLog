@@ -99,14 +99,14 @@ function LoginPage(){
                         <Form.Control type="password" placeholder="Password" name="password" value={val.password} onChange={handleChange}/>
                     </Form.Group>
             
-                    <Button className="form-btn" disabled={loading} style={{background:'#e2e0ff',fontWeight:'bold',color:'#425e16', border:'none'}} type="submit">
+                    <Button className="form-btn" disabled={loading} style={{fontSize:'18px',width: '100%',background:'#e2e0ff',fontWeight:'bold',color:'#425e16', border:'none'}} type="submit">
                         {loading ? 'Please Wait...' : 'Submit'}{/* Submit */}
                     </Button>
 
-                    <div style={{marginTop:'7px'}}>
+                    <div style={{marginTop:'7px', textAlign:'center'}}>
                         <p>Not a user? <Link to='/signup' style={{color:'#e2e0ff',textDecoration:'none'}}>Sign Up here</Link></p>
                     </div>
-                    <p>
+                    <p style={{textAlign:'center'}}>
                         Forgot your password?{' '}
                         <Link to='/user/forgot-password' style={{color:'#e2e0ff'}} >
                             Reset Password
