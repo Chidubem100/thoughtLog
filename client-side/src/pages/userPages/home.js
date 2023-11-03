@@ -51,7 +51,7 @@ function HomePage(){
                     {image !== 'null' ? <Card.Img variant="top" src={image} ></Card.Img> : ' '}
                 
                     <Card.Body>
-                        <Card.Text>{body.slice(0,150)}...<Link className="btnn" style={{backgroundColor: '#425e16', color:'#e2e0ff'}} to={`post/${id}`}>Read more</Link></Card.Text>
+                        {body.slice(0,150)}...<Link className="btnn" style={{backgroundColor: '#425e16', color:'#e2e0ff'}} to={`post/${id}`}>Read more</Link>
                     </Card.Body>
                     <Card.Footer>
                         <small className="text-muted">Created on: {createdAt.slice(0,10)}</small>

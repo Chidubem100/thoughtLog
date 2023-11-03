@@ -128,7 +128,8 @@ function SinglePostPage(){
                 <Card.Header style={{backgroundColor: 'rgb(91,133,26)',color: '#e2e0ff', textAlign:'center',fontWeight:'Bold'}}>{postTitle}</Card.Header>
                 {postImage !== 'null' ? <Card.Img variant="top" src={postImage} ></Card.Img> : ' '}
                 <Card.Body>
-                    <Card.Text>{postBody}</Card.Text>
+                    {postBody}
+                    {/* <Card.Text style={{textAlign: 'center'}} >{postBody}</Card.Text> */}
                 </Card.Body>
                 <Card.Footer>
                     <small className="text-muted">Posted on: {postDate.slice(0,10)}</small>

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useLocalState } from "../../utils/alert";
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
-const baseURL = 'http://localhost:5000/api/v1/blog/';
+const baseURL = 'http://localhost:5000/api/v1/admin/blog/';
 
 
 

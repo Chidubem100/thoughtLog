@@ -105,6 +105,14 @@ const updatePost = async(req,res) =>{
     res.status(StatusCodes.OK).json({success:true, data: post});
 };
 
+const getAllPost = async(req,res) =>{
+    const post = await Post.find({});
+
+    res.status(StatusCodes.OK).json({success:true, count: post.length,data: post})
+    
+}
+
+
 const createPost = async(req,res) =>{
     const {body} = req.body;
     
@@ -148,4 +156,5 @@ module.exports = {
     updatePost,
     deleteComment,
     getAllComment,
+    getAllPost
 };
